@@ -10,9 +10,7 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require sigma
-//= require sigma.plugins.dragNodes/sigma.plugins.dragNodes
-//= require sigma.plugins.relativeSize/sigma.plugins.RelativeSize
+
 
 //= require jquery
 //= require bootstrap-sprockets

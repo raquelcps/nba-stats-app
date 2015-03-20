@@ -20,11 +20,61 @@ class StatisticsController < ApplicationController
 
     @my_row.each do |row|
        row.each do |item|
-        p item
+        # p item
       end
     end
 
-    p @my_row
+    # p @my_row
+
+    #NBA.com passes 
+
+    player_passes = Unirest.get("http://stats.nba.com/stats/playerdashptpass?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&Month=0&OpponentTeamID=0&Outcome=&PerMode=PerGame&Period=0&PlayerID=101108&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&TeamID=0&VsConference=&VsDivision=")
+    p player_passes
+
+     a = player_passes.body
+     # p a
+
+     b = a["resultSets"]
+     # p b
+
+     c = b[0] #gets all PassesMade between playerA and teammates
+     p c
+
+     d = c["headers"]
+     p d
+
+     e = c["rowSet"]
+     p  "e"
+
+     e.each do |row|
+      row.each do |item| 
+        p item
+      end
+    end
+    
+  
+
+     @f = Hash[*d.zip(e[0]).flatten]
+      p @f["PLAYER_NAME_LAST_FIRST"]
+      p @f["PASS_TYPE"]
+      p @f["PASS_TO"]
+
+      # g = Hash[*c["headers"].zip(c["rowSet"]).flatten]
+      # p g
+
+
+    #  @passes = []
+    #  player_passes.each do |passes_hash|
+    #   @passes << Pass.new(passes_hash)
+    #   end
+    # p @passes
+
+
+
+    # @player_passes.each do |pass|
+    #   p pass
+    #   end
+
 
   end
 

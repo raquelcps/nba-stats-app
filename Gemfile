@@ -1,9 +1,11 @@
 source 'https://rubygems.org'
 # Added by author
+gem 'unirest'
 gem 'nba_stats'
 gem 'lazy_high_charts'
 gem 'bootstrap-sass', '~> 3.3.3'
 gem 'xmlstats'
+gem 'vis-rails'
 gem 'sigma-rails'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
