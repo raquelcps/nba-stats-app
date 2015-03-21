@@ -6,7 +6,7 @@ gem 'lazy_high_charts'
 gem 'bootstrap-sass', '~> 3.3.3'
 gem 'xmlstats'
 gem 'vis-rails'
-gem 'sigma-rails'
+# gem 'sigma-rails'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
