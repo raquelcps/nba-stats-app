@@ -68,31 +68,6 @@ class StatisticsController < ApplicationController
       # g = Hash[*c["headers"].zip(c["rowSet"]).flatten]
       # p g
 
-      # var nodes = [
-      #   {id: 1, label: 'Paul,Chris'},
-      #   {id: 2, label: 'Griffin, Blake'},
-      #   {id: 3, label: 'Reddick, JJ'},
-      #   {id: 4, label: 'Barnes, Matt'},
-      #   {id: 5, label: 'Jordan, DeAndre'},
-      #   {id: 6, label: 'Crawford, Jamal'},
-      #   {id: 7, label: 'Hawes, Spencer'},
-      #   {id: 8, label: 'Davis, Glen'},
-      #   {id: 9, label: 'Rivers, Austin'},
-      #   {id: 10, label: 'Turkoglu, Hedo'},
-      #   {id: 11, label: 'Bullock, Reggie'},
-      #   {id: 12, label: 'Farmar, Jordan'},
-      #   {id: 13, label: 'Hamilton, Jordan'},
-      #   {id: 14, label: 'Robinson, Nate'},
-      #   {id: 15, label: 'Jones, Dahntay'},
-      #   {id: 16, label: 'Douglas-Roberts, Chris'}
-      # ];
-
-
-
-
-
-   
-
 
   end
 
