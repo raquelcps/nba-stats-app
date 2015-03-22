@@ -20,7 +20,7 @@ class StatisticsController < ApplicationController
 
     @my_row.each do |row|
        row.each do |item|
-        # p item
+         p item
       end
     end
 
@@ -28,7 +28,7 @@ class StatisticsController < ApplicationController
 
     #NBA.com passes 
 
-    player_passes = Unirest.get("http://stats.nba.com/stats/playerdashptpass?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&Month=0&OpponentTeamID=0&Outcome=&PerMode=PerGame&Period=0&PlayerID=101108&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&TeamID=0&VsConference=&VsDivision=")
+    player_passes = Unirest.get("http://stats.nba.com/stats/playerdashptpass?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&Month=0&OpponentTeamID=0&Outcome=&PerMode=Totals&Period=0&PlayerID=101108&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&TeamID=0&VsConference=&VsDivision=")
     p player_passes
 
      a = player_passes.body
@@ -45,35 +45,53 @@ class StatisticsController < ApplicationController
 
      e = c["rowSet"]
      p  "e"
+     p e
 
-     e.each do |row|
+     g = e.each do |row|
       row.each do |item| 
-        p item
+         p item
       end
-    end
+     end
+    
     
   
 
      @f = Hash[*d.zip(e[0]).flatten]
-      p @f["PLAYER_NAME_LAST_FIRST"]
-      p @f["PASS_TYPE"]
-      p @f["PASS_TO"]
+     p @f
+      # p @f["PLAYER_NAME_LAST_FIRST"]
+      # p @f["PASS_TYPE"]
+      # p @f["PASS_TO"]
+
+     @h = Hash[*d.zip(e[1]).flatten] 
+     p @h
 
       # g = Hash[*c["headers"].zip(c["rowSet"]).flatten]
       # p g
 
+      # var nodes = [
+      #   {id: 1, label: 'Paul,Chris'},
+      #   {id: 2, label: 'Griffin, Blake'},
+      #   {id: 3, label: 'Reddick, JJ'},
+      #   {id: 4, label: 'Barnes, Matt'},
+      #   {id: 5, label: 'Jordan, DeAndre'},
+      #   {id: 6, label: 'Crawford, Jamal'},
+      #   {id: 7, label: 'Hawes, Spencer'},
+      #   {id: 8, label: 'Davis, Glen'},
+      #   {id: 9, label: 'Rivers, Austin'},
+      #   {id: 10, label: 'Turkoglu, Hedo'},
+      #   {id: 11, label: 'Bullock, Reggie'},
+      #   {id: 12, label: 'Farmar, Jordan'},
+      #   {id: 13, label: 'Hamilton, Jordan'},
+      #   {id: 14, label: 'Robinson, Nate'},
+      #   {id: 15, label: 'Jones, Dahntay'},
+      #   {id: 16, label: 'Douglas-Roberts, Chris'}
+      # ];
 
-    #  @passes = []
-    #  player_passes.each do |passes_hash|
-    #   @passes << Pass.new(passes_hash)
-    #   end
-    # p @passes
 
 
 
-    # @player_passes.each do |pass|
-    #   p pass
-    #   end
+
+   
 
 
   end
