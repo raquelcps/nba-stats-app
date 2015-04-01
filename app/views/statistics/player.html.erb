@@ -70,6 +70,7 @@
   </div>
   <div class="row">
     Current Season Game Log
+
   </div>
   <div class="row">
     Current team
@@ -78,6 +79,11 @@
     <% end %>
   </div>
   <div class="row">
+    <!--highchart test-->
+    <%= high_chart("my_bar_div", @bar) %>
+  </div>
+  <div class="row">
+    <%= high_chart("chart_basic_line", @chart) %>
   </div>
 </div> <!--End Container-->
   <script type="text/javascript">
