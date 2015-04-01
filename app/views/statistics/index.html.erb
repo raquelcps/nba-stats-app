@@ -14,8 +14,32 @@
 <% end %>
 </table>
 
-<p><%= @my_speed %></p>
-<p><%= @my_touches%></p>
+<div class="dropdown">
+<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+  Dropdown
+  <span class="caret"></span>
+</button>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+    <% @Teams.each do |team| %>
+    <li><%= team.full_name %></li>
+    <% end %>
+  </ul>
+</div>
+
+<div class="dropdown">
+  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+    Dropdown
+    <span class="caret"></span>
+  </button>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+      <% @Rosters.each do |roster| %>
+      <li><%= roster.display_name %></li>
+      <% end %>
+    </ul>
+</div>
+
+<p>speed<%= @my_speed %></p>
+<p>touches<%= @my_touches%></p>
 
 <table class="table">
 
@@ -26,8 +50,3 @@
   <td><%= @my_assist%></td>
 </tbody>
 </table>
-
-
-<p><%= @f["PASS_TYPE"] %></p>
-<p><%= @f["PASS_TO"] %></p>
-<p><%= @f ["AST"] %></p>

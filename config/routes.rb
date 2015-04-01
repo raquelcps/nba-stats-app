@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   
   get '/statistics' => 'statistics#index'
-  get '/vis' => 'statistics#vistest'
+  get '/player' => 'statistics#player'
+  get '/team' => 'statistics#team'
 
 end

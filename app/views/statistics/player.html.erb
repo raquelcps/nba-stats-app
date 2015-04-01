@@ -1,0 +1,129 @@
+<div class="container">
+  <div class="row">
+    <div class="page-header">
+      <div class="dropdown">
+      <p>Select a team</p>
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+          Dropdown
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+         
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+      <div class="col-md-3">
+        <img src="http://stats.nba.com/media/players/230x185/<%= @data[0]["PLAYER_ID"] %>.png" width="200px">
+      </div>
+      <div class="col-md-6">
+        <h3><%= @data[0]["PLAYER_NAME_LAST_FIRST"] %></h3>
+        <h5>Los Angeles Clippers</h5>
+      </div>
+  </div>
+
+  <div class="row" style="height:30px;">
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <h4>ASSISTS MADE</h4>
+
+      <table class="table" style="font-size: 12px;">
+        <thead>
+          <th>To</th>
+          <th>#</th>
+        </thead>
+        
+        <% @data.sort_by { |hash| hash["AST"]}.reverse. each do |hash| %>
+       
+        <tbody>
+          <td><%= hash["PASS_TO"] %>
+          </td>
+          <td><%= hash["AST"] %>
+          </td>
+        </tbody>
+        <% end %>
+      </table>
+    </div>
+
+    <div class="col-md-7">
+      <div id="mynetwork"></div> 
+     <!--  <select id="dropdownID">
+          <option value="continuous">continuous</option>
+          <option value="discrete">discrete</option>
+      </select> -->
+      <div class="selectors">
+        menus to select nodes
+      </div>
+      <div class="team" style="margin: 20px 0px 10px;">
+        C Paul: X Assists  Team: Assists
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="10*2" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+            60%
+          </div>
+        </div>
+      </div>
+    </div> <!--End col-md-7-->
+  </div>
+  <div class="row">
+    Current Season Game Log
+  </div>
+  <div class="row">
+    Current team
+    <% @rosters.each do |roster| %>
+      <p><%= roster[:player] %></p>
+    <% end %>
+  </div>
+  <div class="row">
+  </div>
+</div> <!--End Container-->
+  <script type="text/javascript">
+      // create an array with nodes
+      //value = AST
+        var nodes = [
+          {id: <%= @data[0]["PLAYER_ID"] %>,  label: '<%= @data[0]["PLAYER_NAME_LAST_FIRST"] %>'},
+          <% @data[0..4].each do |hash| %>
+            {id: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>, value: <%= hash["AST"] %>, label: '<%= hash["PASS_TO"] %>', title: '<%= hash["AST"] %>' },
+          <% end %>
+        ];
+
+        // create an array with edges
+        // value = Frequency
+        var edges = [
+          <% @data[0..4].each do |hash| %>
+            {from: <%= @data[0]["PLAYER_ID"] %>, to: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>, value: <%= hash["FG_PCT"] %>, title: 'Frequency of passes <%= hash["FG_PCT"]%>'},
+          <% end %>
+          
+        ];
+
+
+        // create a network
+        var container = document.getElementById('mynetwork');
+        var data= {
+          nodes: nodes,
+          edges: edges,
+        };
+        var options = {
+          nodes: {
+            shape: 'dot',
+            radiusMin: 5,
+            radiusMax: 50,
+            // fontFace: 'HelveticaNeue-Light',
+
+          },
+          edges: {
+           
+            widthMax: 20,
+          },
+          width: '600px',
+          height: '600px',
+        };
+// var dropdown = document.getElementById("dropdownID");
+// dropdown.onchange = update;
+
+        var network = new vis.Network(container, data, options);
+
+  </script>
