@@ -1,0 +1,185 @@
+<h1>Team Viz</h1>
+<div id="mynetwork"></div> 
+<script type="text/javascript">
+    // create an array with nodes
+    //value = AST
+      var nodes = [
+        {id: <%= @pauldata[0]["PLAYER_ID"] %>,  label: '<%= @pauldata[0]["PLAYER_NAME_LAST_FIRST"] %>'},
+        <% @pauldata.each do |hash| %>
+          {id: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>, label: '<%= hash["PASS_TO"] %>', title: '<%= hash["AST"] %>' },
+        <% end %>
+
+        // {id:1, label: 'player 1'},
+        // {id:2, label: 'player 2'},
+        // {id:3, label: 'player 3'},
+        // {id:4, label: 'player 4'},
+        // {id:5, label: 'player 5'},
+        // {id:6, label: 'player 6'},
+        // {id:7, label: 'player 7'},
+        // {id:8, label: 'player 8'},
+        // {id:9, label: 'player 9'},
+        // {id:10, label: 'player 10'},
+        // {id:11, label: 'player 11'},
+        // {id:12, label: 'player 12'},
+        // {id:13, label: 'player 13'},
+        // {id:14, label: 'player 14'},
+        // {id:15, label: 'player 15'},
+      ];
+
+      // create an array with edges
+      // No values
+      var edges = [
+      <% @pauldata.each do |hash| %>
+        {from: <%= @pauldata[0]["PLAYER_ID"] %>, to: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>},
+      <% end %>
+
+      <% @griffindata.each do |hash| %>
+        {from: <%= @griffindata[0]["PLAYER_ID"] %>, to: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>},
+      <% end %>
+
+      <% @reddickdata.each do |hash| %>
+        {from: <%= @reddickdata[0]["PLAYER_ID"] %>, to: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>},
+      <% end %>
+
+      <% @jordandata.each do |hash| %>
+        {from: <%= @jordandata[0]["PLAYER_ID"] %>, to: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>},
+      <% end %>
+
+      <% @barnesdata.each do |hash| %>
+        {from: <%= @barnesdata[0]["PLAYER_ID"] %>, to: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>},
+      <% end %>
+
+      <% @crawforddata.each do |hash| %>
+        {from: <%= @crawforddata[0]["PLAYER_ID"] %>, to: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>},
+      <% end %>
+
+      <% @hawesdata.each do |hash| %>
+        {from: <%= @hawesdata[0]["PLAYER_ID"] %>, to: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>},
+      <% end %>
+
+      <% @davisdata.each do |hash| %>
+        {from: <%= @davisdata[0]["PLAYER_ID"] %>, to: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>},
+      <% end %>
+
+      <% @riversdata.each do |hash| %>
+        {from: <%= @riversdata[0]["PLAYER_ID"] %>, to: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>},
+      <% end %>
+
+      <% @turkogludata.each do |hash| %>
+        {from: <%= @turkogludata[0]["PLAYER_ID"] %>, to: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>},
+      <% end %>
+
+      <% @hamiltondata.each do |hash| %>
+        {from: <%= @hamiltondata[0]["PLAYER_ID"] %>, to: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>},
+      <% end %>
+
+      <% @bullockdata.each do |hash| %>
+        {from: <%= @bullockdata[0]["PLAYER_ID"] %>, to: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>},
+      <% end %>
+
+      <% @farmardata.each do |hash| %>
+        {from: <%= @farmardata[0]["PLAYER_ID"] %>, to: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>},
+      <% end %>
+
+      <% @jonesdata.each do |hash| %>
+        {from: <%= @jonesdata[0]["PLAYER_ID"] %>, to: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>},
+      <% end %>
+
+      <% @robinsondata.each do |hash| %>
+        {from: <%= @robinsondata[0]["PLAYER_ID"] %>, to: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>},
+      <% end %>
+
+      <% @drobertsdata.each do |hash| %>
+        {from: <%= @drobertsdata[0]["PLAYER_ID"] %>, to: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>},
+      <% end %>
+        // {from: 1, to: 2},
+        // {from: 1, to: 3},
+        // {from: 1, to: 4},
+        // {from: 1, to: 5},
+        // {from: 1, to: 6},
+        // {from: 1, to: 7},
+        // {from: 1, to: 8},
+        // {from: 1, to: 9},
+        // {from: 1, to: 10},
+        // {from: 1, to: 11},
+        // {from: 2, to: 1},
+        // {from: 2, to: 3},
+        // {from: 2, to: 4},
+        // {from: 2, to: 5},
+        // {from: 3, to: 5},
+        // {from: 3, to: 6},
+        // {from: 4, to: 5},
+        // {from: 4, to: 6},
+        // {from: 4, to: 7},
+        // {from: 4, to: 8},
+        // {from: 5, to: 1},
+        // {from: 5, to: 3},
+        // {from: 6, to: 1},
+        // {from: 6, to: 2},
+        // {from: 6, to: 3},
+        // {from: 6, to: 4},
+        // {from: 6, to: 5},
+        // {from: 6, to: 7},
+        // {from: 7, to: 1},
+        // {from: 7, to: 6},
+        // {from: 7, to: 8},
+        // {from: 8, to: 1},
+        // {from: 8, to: 3},
+        // {from: 8, to: 4},
+        // {from: 8, to: 5},
+        // {from: 9, to: 1},
+        // {from: 9, to: 10},
+        // {from: 9, to: 11},
+        // {from: 10, to: 13},
+        // {from: 10, to: 14},
+        // {from: 11, to: 5},
+        // {from: 12, to: 13},
+        // {from: 13, to: 14},
+        // {from: 13, to: 15},
+      ];
+
+
+      // create a network
+      var container = document.getElementById('mynetwork');
+      var data= {
+        nodes: nodes,
+        edges: edges,
+      };
+      var options = {
+        nodes: {
+          shape: 'dot',
+          // color: {
+          //   background: 'red',
+          // },
+          radiusMin: 5,
+          radiusMax: 50,
+          // fontFace: 'HelveticaNeue-Light',
+
+        },
+        edges: {
+         style: 'line',
+        },
+        width: '600px',
+        height: '600px',
+          physics: {
+              barnesHut: {
+                  enabled: true,
+                  gravitationalConstant: 0,
+                  centralGravity: 0,
+                  springLength: 500,
+                  springConstant: 0.09,
+                  damping: .3,
+              },
+        },
+        // to keep edges straight
+        smoothCurves: {
+          enabled: true,
+          dynamic: false,
+          type: "continuous",
+          roundness: 0,
+        },
+        
+      };
+      var network = new vis.Network(container, data, options);
+
+</script>
