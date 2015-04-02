@@ -68,6 +68,33 @@
       </div>
     </div> <!--End col-md-7-->
   </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <h4>ASSISTS FROM</h4>
+        <table class="table" style="font-size: 12px;">
+          <thead>
+            <th>To</th>
+            <th>#</th>
+          </thead>
+          
+          <% @ReceivedData.sort_by { |hash| hash["AST"]}.reverse. each do |hash| %>
+         
+          <tbody>
+            <td><%= hash["PASS_TO"] %>
+            </td>
+            <td><%= hash["AST"] %>
+            </td>
+          </tbody>
+          <% end %>
+        </table>
+
+    </div>
+    <div class="col-md-7">
+      <div id="passreceivednetwork"></div>
+    </div>
+  </div>
+
   <div class="row">
     Current Season Game Log
 
@@ -133,3 +160,51 @@
         var network = new vis.Network(container, data, options);
 
   </script>
+   <script type="text/javascript">
+       // create an array with nodes
+       //value = AST
+       
+         var nodes = [
+           {id: <%= @ReceivedData[0]["PLAYER_ID"] %>,  label: '<%= @data[0]["PLAYER_NAME_LAST_FIRST"] %>'},
+           <% @ReceivedData[0..4].each do |hash| %>
+             {id: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>, value: <%= hash["AST"] %>, label: '<%= hash["PASS_TO"] %>', title: '<%= hash["AST"] %>' },
+           <% end %>
+         ];
+
+         // create an array with edges
+         // value = Frequency
+         var edges = [
+           <% @ReceivedData[0..4].each do |hash| %>
+             {from: <%= @ReceivedData[0]["PLAYER_ID"] %>, to: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>, value: <%= hash["FG_PCT"] %>, title: 'Frequency of passes <%= hash["FG_PCT"]%>'},
+           <% end %>
+           
+         ];
+
+
+         // create a network
+         var container = document.getElementById('passreceivednetwork');
+         var data= {
+           nodes: nodes,
+           edges: edges,
+         };
+         var options = {
+           nodes: {
+             shape: 'dot',
+             radiusMin: 5,
+             radiusMax: 50,
+             // fontFace: 'HelveticaNeue-Light',
+
+           },
+           edges: {
+            
+             widthMax: 20,
+           },
+           width: '600px',
+           height: '600px',
+         };
+ // var dropdown = document.getElementById("dropdownID");
+ // dropdown.onchange = update;
+
+         var network = new vis.Network(container, data, options);
+
+   </script> 

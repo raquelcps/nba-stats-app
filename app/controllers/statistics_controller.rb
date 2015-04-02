@@ -42,7 +42,7 @@ class StatisticsController < ApplicationController
 
   def player
 
-    #NBA.com passes 
+    #NBA.com passes made 
     @player_passes = Unirest.get("http://stats.nba.com/stats/playerdashptpass?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&Month=0&OpponentTeamID=0&Outcome=&PerMode=Totals&Period=0&PlayerID=101108&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&TeamID=0&VsConference=&VsDivision=")
      @player_passes
 
@@ -75,6 +75,37 @@ class StatisticsController < ApplicationController
       "DATA:"
       @data
 
+# player passes received
+     # @player_passes_rec = Unirest.get("http://stats.nba.com/stats/playerdashptpass?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&Month=0&OpponentTeamID=0&Outcome=&PerMode=Totals&Period=0&PlayerID=101108&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&TeamID=0&VsConference=&VsDivision=")
+      
+      # a = @player_passes_rec.body
+
+      # b = a["resultSets"]
+
+      recc = b[1] #gets all PassesMade from playerA to teammates
+
+      recd = recc["headers"]
+
+      rece = recc["rowSet"]
+
+      # g = e.each do |row|
+      #  row.each do |item| 
+      #     p item
+      #  end
+      # end
+
+      @ReceivedData = []
+       p "ZIPPING!!"
+      rece.each do |row|
+       hash = Hash[*d.zip(row).flatten]
+       # keys_to_delete.each do |key|
+       #   hash.delete(key)
+       # end
+       @ReceivedData << hash 
+      end
+       p "DATA:"
+       p @ReceivedData
+
      #team roster with hardcoded team id
      client = NbaStats::Client.new
      my_resource = client.common_team_roster("1610612746","2014-15")
@@ -85,7 +116,7 @@ class StatisticsController < ApplicationController
       @rosters.each do |roster|
       roster[:player]
       end
-
+#player game log
       @player_game_log = Unirest.get("http://stats.nba.com/stats/playergamelog?LeagueID=00&PlayerID=101108&Season=2014-15&SeasonType=Regular+Season")
 
       a = @player_game_log.body
@@ -95,7 +126,6 @@ class StatisticsController < ApplicationController
 
       c = b[0]
       
-
       d = c["headers"]
 
       e = c["rowSet"]
