@@ -94,7 +94,7 @@ class StatisticsController < ApplicationController
       p b
 
       c = b[0]
-      p c
+      
 
       d = c["headers"]
 
@@ -104,27 +104,69 @@ class StatisticsController < ApplicationController
        "ZIPPING!!"
       e.each do |row|
        hash = Hash[*d.zip(row).flatten]
-       keys_to_delete.each do |key|
-         hash.delete(key)
-       end
+       # keys_to_delete.each do |key|
+       #   hash.delete(key)
+       # end
        @player_game_log_data << hash 
       end
        "DATA:"
        p @player_game_log_data
+# Each thru player game log data to find key and values for highchart series
+       pf_array = []
+       to_array = []
+       blk_array = []
+       stl_array = []
+       ast_array = []
+       reb_array = []
+       pts_array =[]
+       @player_game_log_data. each do |game|
+         pf_array << game["PF"]
+         to_array << game["TOV"]
+         blk_array << game["BLK"]
+         stl_array << game["STL"]
+         ast_array << game["AST"]
+         reb_array << game["REB"]
+         pts_array << game["PTS"]
+       end
+      p 'points array'
+      p pts_array
 
        #highchart test
        @bar = LazyHighCharts::HighChart.new('column') do |f|
-           f.series(:name=>'John',:data=> [3, 20, 3, 5, 4, 10, 12 ])
-           f.series(:name=>'Jane',:data=>[1, 3, 4, 3, 3, 5, 4, 20] )     
-           f.title({ :text=>"example test title from controller"})
+        
+         f.series(:name=>'PF',:data=>pf_array )     
+         f.series(:name=>'TO',:data=>to_array )
+         f.series(:name=>'BLK',:data=>blk_array )     
+         f.series(:name=>'STL',:data=> stl_array, color: '#eee')
+         f.series(:name=>'AST',:data=> ast_array )
+         f.series(:name=>'REB',:data=> reb_array )
+          f.series(:name=>'PTS',:data=>pts_array)
 
+
+           f.title({ :text=>"Player Game Log"})
+           f.legend({
+              align: 'right',
+              verticalAlign: 'top',
+              # x: -10,
+              # y: 50,
+              floating: false
+            }) 
+            f.xAxis({
+              allowDecimals: false,
+              title: {
+                text: 'Games'
+              }
+              }) 
+            f.tooltip({
+              shared: true
+            })
            ###  Options for Bar
            ### f.options[:chart][:defaultSeriesType] = "bar"
            ### f.plot_options({:series=>{:stacking=>"normal"}}) 
 
            ## or options for column
            f.options[:chart][:defaultSeriesType] = "column"
-           f.plot_options({:column=>{:stacking=>"normal"}})
+           f.plot_options({:column=>{:stacking=>"percent"}})
          end
 
         #highchart test 2
@@ -137,7 +179,7 @@ class StatisticsController < ApplicationController
              })
              f.xAxis({
                 categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
              })
              f.yAxis({
                title: {
