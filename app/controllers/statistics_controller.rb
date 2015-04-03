@@ -42,7 +42,7 @@ class StatisticsController < ApplicationController
 
   def player
 
-    #NBA.com passes 
+    #NBA.com passes made 
     @player_passes = Unirest.get("http://stats.nba.com/stats/playerdashptpass?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&Month=0&OpponentTeamID=0&Outcome=&PerMode=Totals&Period=0&PlayerID=101108&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&TeamID=0&VsConference=&VsDivision=")
      @player_passes
 
@@ -62,7 +62,7 @@ class StatisticsController < ApplicationController
       end
      end
 #How do i do this so that the first row references playerA only, but the following nodes are teammates passed to
-     keys_to_delete = ["TEAM_NAME", "TEAM_ID", "PASS_TYPE", "G", "FREQUENCY", "PASS", "FGM", "FGA", "FG_2PCT", "FG2M", "FG2A", "FG2_PCT", "FG3M", "FG3A", "FG3_PCT"]
+     keys_to_delete = ["TEAM_NAME", "TEAM_ID", "PASS_TYPE", "G", "FREQUENCY", "PASS"]
      @data = []
       "ZIPPING!!"
      e.each do |row|
@@ -75,6 +75,37 @@ class StatisticsController < ApplicationController
       "DATA:"
       @data
 
+# player passes received
+     # @player_passes_rec = Unirest.get("http://stats.nba.com/stats/playerdashptpass?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&Month=0&OpponentTeamID=0&Outcome=&PerMode=Totals&Period=0&PlayerID=101108&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&TeamID=0&VsConference=&VsDivision=")
+      
+      # a = @player_passes_rec.body
+
+      # b = a["resultSets"]
+
+      recc = b[1] #gets all PassesMade from playerA to teammates
+
+      recd = recc["headers"]
+
+      rece = recc["rowSet"]
+
+      # g = e.each do |row|
+      #  row.each do |item| 
+      #     p item
+      #  end
+      # end
+
+      @ReceivedData = []
+       p "ZIPPING!!"
+      rece.each do |row|
+       hash = Hash[*d.zip(row).flatten]
+       # keys_to_delete.each do |key|
+       #   hash.delete(key)
+       # end
+       @ReceivedData << hash 
+      end
+       p "DATA:"
+       p @ReceivedData
+
      #team roster with hardcoded team id
      client = NbaStats::Client.new
      my_resource = client.common_team_roster("1610612746","2014-15")
@@ -85,7 +116,7 @@ class StatisticsController < ApplicationController
       @rosters.each do |roster|
       roster[:player]
       end
-
+#player game log
       @player_game_log = Unirest.get("http://stats.nba.com/stats/playergamelog?LeagueID=00&PlayerID=101108&Season=2014-15&SeasonType=Regular+Season")
 
       a = @player_game_log.body
@@ -94,8 +125,7 @@ class StatisticsController < ApplicationController
       p b
 
       c = b[0]
-      p c
-
+      
       d = c["headers"]
 
       e = c["rowSet"]
@@ -104,13 +134,134 @@ class StatisticsController < ApplicationController
        "ZIPPING!!"
       e.each do |row|
        hash = Hash[*d.zip(row).flatten]
-       keys_to_delete.each do |key|
-         hash.delete(key)
-       end
+       # keys_to_delete.each do |key|
+       #   hash.delete(key)
+       # end
        @player_game_log_data << hash 
       end
        "DATA:"
        p @player_game_log_data
+# Each thru player game log data to find key and values for highchart series
+       pf_array = []
+       to_array = []
+       blk_array = []
+       stl_array = []
+       ast_array = []
+       reb_array = []
+       pts_array =[]
+       opp_array = []
+       @player_game_log_data. each do |game|
+         pf_array << game["PF"]
+         to_array << game["TOV"]
+         blk_array << game["BLK"]
+         stl_array << game["STL"]
+         ast_array << game["AST"]
+         reb_array << game["REB"]
+         pts_array << game["PTS"]
+         opp_array << game["MATCHUP"]
+       end
+      p 'points array'
+      p pts_array
+
+       #highchart test
+       @bar = LazyHighCharts::HighChart.new('column') do |f|
+        
+         f.series(:name=>'PF',:data=>pf_array )     
+         f.series(:name=>'TO',:data=>to_array )
+         f.series(:name=>'BLK',:data=>blk_array )     
+         f.series(:name=>'STL',:data=> stl_array, color: '#eee')
+         f.series(:name=>'AST',:data=> ast_array )
+         f.series(:name=>'REB',:data=> reb_array )
+         f.series(:name=>'PTS',:data=>pts_array)
+
+
+           f.title({ :text=>"Player Game Log"})
+           f.legend({
+              align: 'right',
+              verticalAlign: 'top',
+              # x: -10,
+              # y: 50,
+              floating: false
+            }) 
+            f.xAxis({
+              allowDecimals: false,
+              title: {
+                text: 'Games'
+              },
+              # categories: opp_array,
+              # labels: {
+              #   staggerLines: 2
+
+              # }
+            }) 
+            f.tooltip({
+              pointFormat: '{series.name}: <b style="color:{series.color}">{point.y}</b><br/>',
+              shared: true
+            })
+           ###  Options for Bar
+           ### f.options[:chart][:defaultSeriesType] = "bar"
+           ### f.plot_options({:series=>{:stacking=>"normal"}}) 
+
+           ## or options for column
+           f.options[:chart][:defaultSeriesType] = "column"
+           f.plot_options({:column=>{:stacking=>"normal"}})
+         end
+
+        #highchart test 2
+           @chart = LazyHighCharts::HighChart.new('basic_line') do |f|
+             f.chart({ type: 'line',
+                       marginRight: 130,
+                       marginBottom: 25 })
+             f.title({  text: 'Monthly Average Temperature',
+                        x: -20
+             })
+             f.xAxis({
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                                 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+             })
+             f.yAxis({
+               title: {
+                 text: 'Temperature (°C)'
+               },
+               plotLines: [{
+                 value: 0,
+                 width: 1,
+                 color: '#808080'
+               }]
+             })
+             f.tooltip({
+               valueSuffix: '°C'
+             })
+             f.legend({
+               layout: 'vertical',
+               align: 'right',
+               verticalAlign: 'top',
+               x: -10,
+               y: 100,
+               borderWidth: 0
+             })
+             f.subtitle({
+               text: 'Source: WorldClimate.com',
+               x: -20
+             })
+             f.series({
+               name: 'Tokyo',
+               data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+             })
+             f.series(
+               name: 'New York',
+               data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
+             )
+             f.series({
+               name: 'Berlin',
+               data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
+             })
+             f.series({
+                 name: 'London',
+                 data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+             })
+           end
+         
 
   end #player
 
