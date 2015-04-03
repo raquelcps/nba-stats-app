@@ -35,6 +35,9 @@
         <thead>
           <th>To</th>
           <th>#</th>
+          <th>FG</th>
+          <th>FGA</th>
+          <th>FG%</th>
         </thead>
         
         <% @data.sort_by { |hash| hash["AST"]}.reverse. each do |hash| %>
@@ -43,6 +46,12 @@
           <td><%= hash["PASS_TO"] %>
           </td>
           <td><%= hash["AST"] %>
+          </td>
+          <td><%= hash["FGM"] %>
+          </td>
+          <td><%= hash["FGA"] %>
+          </td>
+          <td><%= hash["FG_PCT"] %>
           </td>
         </tbody>
         <% end %>
@@ -97,6 +106,8 @@
 
   <div class="row">
     Current Season Game Log
+    <!--highchart-->
+    <%= high_chart("my_bar_div", @bar) %>
 
   </div>
   <div class="row">
@@ -105,10 +116,7 @@
       <p><%= roster[:player] %></p>
     <% end %>
   </div>
-  <div class="row">
-    <!--highchart test-->
-    <%= high_chart("my_bar_div", @bar) %>
-  </div>
+  
   <div class="row">
     <%= high_chart("chart_basic_line", @chart) %>
   </div>
@@ -163,7 +171,7 @@
    <script type="text/javascript">
        // create an array with nodes
        //value = AST
-       
+
          var nodes = [
            {id: <%= @ReceivedData[0]["PLAYER_ID"] %>,  label: '<%= @data[0]["PLAYER_NAME_LAST_FIRST"] %>'},
            <% @ReceivedData[0..4].each do |hash| %>

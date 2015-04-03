@@ -62,7 +62,7 @@ class StatisticsController < ApplicationController
       end
      end
 #How do i do this so that the first row references playerA only, but the following nodes are teammates passed to
-     keys_to_delete = ["TEAM_NAME", "TEAM_ID", "PASS_TYPE", "G", "FREQUENCY", "PASS", "FGM", "FGA", "FG_2PCT", "FG2M", "FG2A", "FG2_PCT", "FG3M", "FG3A", "FG3_PCT"]
+     keys_to_delete = ["TEAM_NAME", "TEAM_ID", "PASS_TYPE", "G", "FREQUENCY", "PASS"]
      @data = []
       "ZIPPING!!"
      e.each do |row|
@@ -149,6 +149,7 @@ class StatisticsController < ApplicationController
        ast_array = []
        reb_array = []
        pts_array =[]
+       opp_array = []
        @player_game_log_data. each do |game|
          pf_array << game["PF"]
          to_array << game["TOV"]
@@ -157,6 +158,7 @@ class StatisticsController < ApplicationController
          ast_array << game["AST"]
          reb_array << game["REB"]
          pts_array << game["PTS"]
+         opp_array << game["MATCHUP"]
        end
       p 'points array'
       p pts_array
@@ -170,7 +172,7 @@ class StatisticsController < ApplicationController
          f.series(:name=>'STL',:data=> stl_array, color: '#eee')
          f.series(:name=>'AST',:data=> ast_array )
          f.series(:name=>'REB',:data=> reb_array )
-          f.series(:name=>'PTS',:data=>pts_array)
+         f.series(:name=>'PTS',:data=>pts_array)
 
 
            f.title({ :text=>"Player Game Log"})
@@ -185,9 +187,15 @@ class StatisticsController < ApplicationController
               allowDecimals: false,
               title: {
                 text: 'Games'
-              }
-              }) 
+              },
+              # categories: opp_array,
+              # labels: {
+              #   staggerLines: 2
+
+              # }
+            }) 
             f.tooltip({
+              pointFormat: '{series.name}: <b style="color:{series.color}">{point.y}</b><br/>',
               shared: true
             })
            ###  Options for Bar
@@ -196,7 +204,7 @@ class StatisticsController < ApplicationController
 
            ## or options for column
            f.options[:chart][:defaultSeriesType] = "column"
-           f.plot_options({:column=>{:stacking=>"percent"}})
+           f.plot_options({:column=>{:stacking=>"normal"}})
          end
 
         #highchart test 2
