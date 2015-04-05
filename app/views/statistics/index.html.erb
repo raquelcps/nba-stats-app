@@ -1,52 +1,102 @@
-<h1>Stats will be here</h1>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+<div class="container" style="padding:0px 40px;">
+  <div class="row">
+    <div class="page-header">
+      <h1>Hoop Helix</h1>
+    </div>
+  </div>
 
-<table class="table">
-  <thead>
-    <th>Player</th>
-    <th>Points</th>
-  </thead>
+  <div class="row">
+    <div class="dropdown col-md-2 col-md-offset-8">
+    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+      Select a Team
+      <span class="caret"></span>
+    </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+        
+      </ul>
+    </div> <!-- End dropdown -->
 
-<% @Leaders.each do |leader| %>
-  <tbody>
-    <td><%= leader.display_name %></td>
-    <td><%= leader.value %></td>
-  </tbody>
-<% end %>
-</table>
+    <div class="dropdown col-md-2">
+    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+      Select a Player
+      <span class="caret"></span>
+    </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+        <!--  -->
+      </ul>
+    </div> <!-- End dropdown -->
+  </div> <!-- End row -->
+    
+  <div class="row">
+    <h1>Point Leaders</h1>
+    <div class="col-md-6">
+     <!--highchart-->
+      <%= high_chart("pts_leader_chart", @pts_bar) %>
+    </div>
+  </div>
 
-<div class="dropdown">
-<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-  Dropdown
-  <span class="caret"></span>
-</button>
-  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-    <% @Teams.each do |team| %>
-    <li><%= team.full_name %></li>
-    <% end %>
-  </ul>
-</div>
+  <div class="row">
+    <h1>Rebound Leaders</h1>
+    <div class="col-md-6">
+      <!--highchart-->
+       <%= high_chart("reb_leader_chart", @reb_bar) %>
+    </div>
+  </div>
 
-<div class="dropdown">
-  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-    Dropdown
-    <span class="caret"></span>
-  </button>
-    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-      <% @Rosters.each do |roster| %>
-      <li><%= roster.display_name %></li>
+  <div class="row">
+    <h1>Assist Leaders</h1>
+    <div class="col-md-6">
+      <!--highchart-->
+       <%= high_chart("ast_leader_chart", @ast_bar) %>
+    </div>
+
+    <!-- <div class="col-md-4">
+
+      <table class="table">
+        <thead>
+          <th>Player</th>
+          <th>Assists</th>
+        </thead>
+
+      <% @Assistsdata.each do |leader| %>
+        <tbody>
+          <td><%= leader["PLAYER"] %></td>
+          <td><%= leader["AST"] %></td>
+        </tbody>
       <% end %>
-    </ul>
-</div>
+      </table>
+    </div> -->
+  </div>
 
-<p>speed<%= @my_speed %></p>
-<p>touches<%= @my_touches%></p>
+  <div class="row">
+    <h1>Steal Leaders</h1>
+    <div class="col-md-4">
+      <!--highchart-->
+       <%= high_chart("stl_leader_chart", @stl_bar) %>
+    </div>
+  </div>
 
-<table class="table">
+  <div class="row">
+    <h1>Block Leaders</h1>
+    <div class="col-md-6">
+      <!--highchart-->
+       <%= high_chart("blk_leader_chart", @blk_bar) %>
+    </div>
+  </div>
 
-<tbody>
-  <td><%= @my_speed %></td>
-  <td><%= @my_touches%></td>
-  <td><%= @my_pass%></td>
-  <td><%= @my_assist%></td>
-</tbody>
-</table>
+
+
+        <p>speed<%= @my_speed %></p>
+        <p>touches<%= @my_touches%></p>
+
+        <table class="table">
+
+        <tbody>
+          <td><%= @my_speed %></td>
+          <td><%= @my_touches%></td>
+          <td><%= @my_pass%></td>
+          <td><%= @my_assist%></td>
+        </tbody>
+        </table>
+</div> <!-- End container -->

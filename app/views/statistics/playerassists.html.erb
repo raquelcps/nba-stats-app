@@ -16,26 +16,17 @@
     </div> <!-- End page-header -->
   </div>
 
-  <div class="row" style="height:30px;">
-  </div>
-
   <div class="row">
-      <div class="col-md-4">
-        <div id="mynetwork"></div> 
-      </div>
-
-      <div class="col-md-4">
-        <div id="passreceivednetwork"></div>
-        <div class="selectors">
-          menus to select nodes
-        </div>
-      </div>
-
-      <div class="col-md-4">
+      <div class="col-md-3">
         <img src="http://stats.nba.com/media/players/230x185/<%= @data[0]["PLAYER_ID"] %>.png" width="200px">
+      </div>
+      <div class="col-md-6">
         <h3><%= @data[0]["PLAYER_NAME_LAST_FIRST"] %></h3>
         <h5>Los Angeles Clippers</h5>
       </div>
+  </div>
+
+  <div class="row" style="height:30px;">
   </div>
 
   <div class="row">
@@ -69,7 +60,15 @@
       </table>
     </div>
 
-    <div class="col-md-4">    
+    <div class="col-md-7">
+      <div id="mynetwork"></div> 
+     <!--  <select id="dropdownID">
+          <option value="continuous">continuous</option>
+          <option value="discrete">discrete</option>
+      </select> -->
+      <div class="selectors">
+        menus to select nodes
+      </div>
       <div class="team" style="margin: 20px 0px 10px;">
         C Paul: X Assists  Team: Assists
         <div class="progress">
@@ -78,7 +77,7 @@
           </div>
         </div>
       </div>
-    </div> <!--End col-md-4-->
+    </div> <!--End col-md-7-->
   </div>
 
   <div class="row">
@@ -100,15 +99,19 @@
           </tbody>
           <% end %>
         </table>
-    </div>    
+
+    </div>
+    <div class="col-md-7">
+      <div id="passreceivednetwork"></div>
+    </div>
   </div>
 
   <div class="row">
     Current Season Game Log
     <!--highchart-->
     <%= high_chart("my_bar_div", @bar) %>
+
   </div>
-  
   <div class="row">
     Current team
     <% @rosters.each do |roster| %>
