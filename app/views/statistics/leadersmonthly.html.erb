@@ -1,0 +1,26 @@
+<div class="row">
+  <h1>Points</h1>
+  <div class="col-md-5">
+
+    <table class="table" id="ptstable">
+      <thead>
+        <th>Player</th>
+        <th>Points</th>
+      </thead>
+
+    <% @Pointsdata.each do |leader| %>
+      <tbody>
+        <td><%= leader["PLAYER"] %></td>
+        <td><%= leader["PTS"] %></td>
+      </tbody>
+    <% end %>
+    </table>
+  </div>
+
+  <div class="col-md-6">
+   <!--  highchart test 2 -->
+   <script src="http://code.highcharts.com/modules/data.js"></script>
+
+      <%= high_chart("pts_line", @chart) %>
+  </div>
+</div>
