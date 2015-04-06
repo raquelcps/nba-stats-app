@@ -6,11 +6,6 @@ class StatisticsController < ApplicationController
     # Xmlstats.contact_info = "rodriguez.reads@gmail.com"
 
     # @PtsLeaders = Xmlstats.nba_leaders(:points_per_game)
-    # @AstLeaders = Xmlstats.nba_leaders(:assists_per_game)
-    # @RebLeaders = Xmlstats.nba_leaders(:rebounds_per_game)
-    # @BlkLeaders = Xmlstats.nba_leaders(:blocks_per_game)
-    # @StlLeaders = Xmlstats.nba_leaders(:steals_per_game)
-
 
     # @Teams = Xmlstats.nba_teams
     # @Team_rosters =[]
@@ -43,14 +38,14 @@ class StatisticsController < ApplicationController
        row.each do |item|
       end
     end
-
+#League leaders (players)
     leaders_all = Unirest.get("http://stats.nba.com/stats/homepagev2?GameScope=Season&LeagueID=00&PlayerOrTeam=Player&PlayerScope=All+Players&Season=2014-15&SeasonType=Regular+Season&StatType=Traditional")
 
     a = leaders_all.body
     b = a["resultSets"]
     p "RESULT SETS"
     p b
-    #Points
+    #Points first in array
     c = b[0] 
     p c
     d = c["headers"]
@@ -111,231 +106,358 @@ class StatisticsController < ApplicationController
          f.options[:chart][:defaultSeriesType] = "column"
       end #Points
 
-      @Reboundsdata = []
-       "ZIPPING!!"
-      h.each do |row|
-       hash = Hash[*g.zip(row).flatten]
-       @Reboundsdata << hash 
-      end
+    @Reboundsdata = []
+     "ZIPPING!!"
+    h.each do |row|
+     hash = Hash[*g.zip(row).flatten]
+     @Reboundsdata << hash 
+    end
 
-      name_array = []
-      rebounds_array = []
-      teamid_array = []
-      playerid_array = []
-      @Reboundsdata.each do |row|
-        name_array << row["PLAYER"]
-        rebounds_array << row["REB"]
-        playerid_array << row["PLAYER_ID"]
-        teamid_array << row["TEAM_ID"]
-      end
+    name_array = []
+    rebounds_array = []
+    teamid_array = []
+    playerid_array = []
+    @Reboundsdata.each do |row|
+      name_array << row["PLAYER"]
+      rebounds_array << row["REB"]
+      playerid_array << row["PLAYER_ID"]
+      teamid_array << row["TEAM_ID"]
+    end
 
-      @reb_bar = LazyHighCharts::HighChart.new('reb_leader_chart') do |f|
-       
-        f.series(:name=>'Rebounds',:data=>rebounds_array )     
-        f.title({ :text=>"Rebounds Per Game-Player"})
-        f.legend({
-           enabled: false
-         }) 
-         f.xAxis({
-           allowDecimals: false,
-           categories: name_array
-         }) 
-         f.tooltip({
-           pointFormat: '{series.name}: <b style="color:{series.color}">{point.y}</b><br/>',
-           shared: true
-         })
-          #  Options for Bar
-           f.options[:chart][:defaultSeriesType] = "column"
-        end   #Rebounds
+    @reb_bar = LazyHighCharts::HighChart.new('reb_leader_chart') do |f|
+     
+      f.series(:name=>'Rebounds',:data=>rebounds_array )     
+      f.title({ :text=>"Rebounds Per Game-Player"})
+      f.legend({
+         enabled: false
+       }) 
+       f.xAxis({
+         allowDecimals: false,
+         categories: name_array
+       }) 
+       f.tooltip({
+         pointFormat: '{series.name}: <b style="color:{series.color}">{point.y}</b><br/>',
+         shared: true
+       })
+        #  Options for Bar
+         f.options[:chart][:defaultSeriesType] = "column"
+      end   #Rebounds
 
-        @Assistsdata = []
-         "ZIPPING!!"
-        k.each do |row|
-         hash = Hash[*j.zip(row).flatten]
-         @Assistsdata << hash 
-        end
+    @Assistsdata = []
+     "ZIPPING!!"
+    k.each do |row|
+     hash = Hash[*j.zip(row).flatten]
+     @Assistsdata << hash 
+    end
 
-        name_array = []
-        assists_array = []
-        teamid_array = []
-        playerid_array = []
-        @Assistsdata.each do |row|
-          name_array << row["PLAYER"]
-          assists_array << row["AST"]
-          playerid_array << row["PLAYER_ID"]
-          teamid_array << row["TEAM_ID"]
-        end
+    name_array = []
+    assists_array = []
+    teamid_array = []
+    playerid_array = []
+    @Assistsdata.each do |row|
+      name_array << row["PLAYER"]
+      assists_array << row["AST"]
+      playerid_array << row["PLAYER_ID"]
+      teamid_array << row["TEAM_ID"]
+    end
 
-        @ast_bar = LazyHighCharts::HighChart.new('ast_leader_chart') do |f|
-         
-          f.series(:name=>'Assists',:data=>assists_array)     
-          f.title({ :text=>"Assists"})
-          f.legend({
-             enabled: false
-           }) 
-           f.xAxis({
-             allowDecimals: false,
-             categories: name_array
-           }) 
-           # f.plot_options({:column=>{:stacking=>"normal"}})
-         
-           f.tooltip({
-             pointFormat: '{series.name}: <b style="color:{series.color}">{point.y}</b><br/>',
-             shared: true
-           })
-            #  Options for Bar
-             f.options[:chart][:defaultSeriesType] = "column"
-          end   #Assists
+    @ast_bar = LazyHighCharts::HighChart.new('ast_leader_chart') do |f|
+     
+      f.series(:name=>'Assists',:data=>assists_array)     
+      f.title({ :text=>"Assists"})
+      f.legend({
+         enabled: false
+       }) 
+       f.xAxis({
+         allowDecimals: false,
+         categories: name_array
+       }) 
+       # f.plot_options({:column=>{:stacking=>"normal"}})
+     
+       f.tooltip({
+         pointFormat: '{series.name}: <b style="color:{series.color}">{point.y}</b><br/>',
+         shared: true
+       })
+        #  Options for Bar
+         f.options[:chart][:defaultSeriesType] = "column"
+      end   #Assists
 
-          @Stealsdata = []
-           "ZIPPING!!"
-          n.each do |row|
-           hash = Hash[*m.zip(row).flatten]
-           @Stealsdata << hash 
-          end
+    @Stealsdata = []
+     "ZIPPING!!"
+    n.each do |row|
+     hash = Hash[*m.zip(row).flatten]
+     @Stealsdata << hash 
+    end
 
-          name_array = []
-          steals_array = []
-          teamid_array = []
-          playerid_array = []
-          @Stealsdata.each do |row|
-            name_array << row["PLAYER"]
-            steals_array << row["STL"]
-            playerid_array << row["PLAYER_ID"]
-            teamid_array << row["TEAM_ID"]
-          end
+    name_array = []
+    steals_array = []
+    teamid_array = []
+    playerid_array = []
+    @Stealsdata.each do |row|
+      name_array << row["PLAYER"]
+      steals_array << row["STL"]
+      playerid_array << row["PLAYER_ID"]
+      teamid_array << row["TEAM_ID"]
+    end
 p name_array
-          @stl_bar = LazyHighCharts::HighChart.new('stl_leader_chart') do |f|
-           
-            f.series(:name=>'Steals',:data=>steals_array )     
-            f.title({ :text=>"Steals"})
-            f.legend({
-               enabled: false
-             }) 
-             f.xAxis({
-               allowDecimals: false,
-               categories: name_array
-             }) 
-             f.tooltip({
-               pointFormat: '{series.name}: <b style="color:{series.color}">{point.y}</b><br/>',
-               shared: true
-             })
-              #  Options for Bar
-               f.options[:chart][:defaultSeriesType] = "column"
-            end #Steals
+    @stl_bar = LazyHighCharts::HighChart.new('stl_leader_chart') do |f|
+     
+      f.series(:name=>'Steals',:data=>steals_array )     
+      f.title({ :text=>"Steals"})
+      f.legend({
+         enabled: false
+       }) 
+       f.xAxis({
+         allowDecimals: false,
+         categories: name_array
+       }) 
+       f.tooltip({
+         pointFormat: '{series.name}: <b style="color:{series.color}">{point.y}</b><br/>',
+         shared: true
+       })
+        #  Options for Bar
+         f.options[:chart][:defaultSeriesType] = "column"
+      end #Steals
 
-            @Blocksdata = []
-             "ZIPPING!!"
-            q.each do |row|
-             hash = Hash[*p.zip(row).flatten]
-             @Blocksdata << hash 
-            end
+    @Blocksdata = []
+     "ZIPPING!!"
+    q.each do |row|
+     hash = Hash[*p.zip(row).flatten]
+     @Blocksdata << hash 
+    end
 
-            name_array = []
-            blocks_array = []
-            teamid_array = []
-            playerid_array = []
-            @Blocksdata.each do |row|
-              name_array << row["PLAYER"]
-              blocks_array << row["BLK"]
-              playerid_array << row["PLAYER_ID"]
-              teamid_array << row["TEAM_ID"]
-            end
+    name_array = []
+    blocks_array = []
+    teamid_array = []
+    playerid_array = []
+    @Blocksdata.each do |row|
+      name_array << row["PLAYER"]
+      blocks_array << row["BLK"]
+      playerid_array << row["PLAYER_ID"]
+      teamid_array << row["TEAM_ID"]
+    end
 
-            @blk_bar = LazyHighCharts::HighChart.new('blk_leader_chart') do |f|
-             
-              f.series(:name=>'Blocks',:data=>blocks_array, :color=>"#57579C" )     
-              f.title({ :text=>"Blocks"})
-              f.legend({
-                 enabled: false
-               }) 
-               f.xAxis({
-                 allowDecimals: false,
-                 categories: name_array
-               }) 
-               f.tooltip({
-                 pointFormat: '{series.name}: <b style="color:{series.color}">{point.y}</b><br/>',
-                 shared: true
-               })
-                #  Options for Bar
-                 f.options[:chart][:defaultSeriesType] = "column"
-            end #Blocks
-
-  
+    @blk_bar = LazyHighCharts::HighChart.new('blk_leader_chart') do |f|
+     
+      f.series(:name=>'Blocks',:data=>blocks_array, :color=>"#57579C" )     
+      f.title({ :text=>"Blocks"})
+      f.legend({
+         enabled: false
+       }) 
+       f.xAxis({
+         allowDecimals: false,
+         categories: name_array
+       }) 
+       f.tooltip({
+         pointFormat: '{series.name}: <b style="color:{series.color}">{point.y}</b><br/>',
+         shared: true
+       })
+        #  Options for Bar
+         f.options[:chart][:defaultSeriesType] = "column"
+    end #Blocks
   end #index
 
   def leadersmonthly
-        leaders_all = Unirest.get("http://stats.nba.com/stats/homepagev2?GameScope=Season&LeagueID=00&PlayerOrTeam=Player&PlayerScope=All+Players&Season=2014-15&SeasonType=Regular+Season&StatType=Traditional")
+    leaders_all = Unirest.get("http://stats.nba.com/stats/homepagev2?GameScope=Season&LeagueID=00&PlayerOrTeam=Player&PlayerScope=All+Players&Season=2014-15&SeasonType=Regular+Season&StatType=Traditional")
 
-        a = leaders_all.body
-        b = a["resultSets"]
-        p "RESULT SETS"
-        p b
+    a = leaders_all.body
+    b = a["resultSets"]
+    p "RESULT SETS"
+    p b
 
-        c = b[0]
-        p c
+    c = b[0]
+    p c
 
-        d = c["headers"]
-        e = c["rowSet"] 
+    d = c["headers"]
+    e = c["rowSet"] 
 
-        @Pointsdata = []
-         "ZIPPING!!"
-        e.each do |row|
-         hash = Hash[*d.zip(row).flatten]
-         # keys_to_delete.each do |key|
-         #   hash.delete(key)
-         # end
-         @Pointsdata << hash 
-        end
-        p "Points DATA:"
-        p @Pointsdata
+    @Pointsdata = []
+     "ZIPPING!!"
+    e.each do |row|
+     hash = Hash[*d.zip(row).flatten]
+     # keys_to_delete.each do |key|
+     #   hash.delete(key)
+     # end
+     @Pointsdata << hash 
+    end
+    p "Points DATA:"
+    p @Pointsdata
 
-        @name_array = []
-        @points_array = []
-        @teamid_array = []
-        @playerid_array = []
-        @Pointsdata.each do |row|
-          @name_array << row["PLAYER"]
-          @points_array << row["PTS"]
-          @playerid_array << row["PLAYER_ID"]
-          @teamid_array << row["TEAM_ID"]
-        end
+    @name_array = []
+    @points_array = []
+    @teamid_array = []
+    @playerid_array = []
+    @Pointsdata.each do |row|
+      @name_array << row["PLAYER"]
+      @points_array << row["PTS"]
+      @playerid_array << row["PLAYER_ID"]
+      @teamid_array << row["TEAM_ID"]
+    end
     p @teamid_array
 
 
-       player0_dashboard_month = Unirest.get("http://stats.nba.com/stats/playerdashboardbygeneralsplits?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PaceAdjust=N&PerMode=PerGame&Period=0&PlayerID=#{@playerid_array[0]}&PlusMinus=N&Rank=N&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&VsConference=&VsDivision=")
-       
-       a = player0_dashboard_month.body
-       b = a["resultSets"]
-       
-       c = b[3] #specific array for month data
-       
-       d = c["headers"]
-       e = c["rowSet"]
+     player0_dashboard_month = Unirest.get("http://stats.nba.com/stats/playerdashboardbygeneralsplits?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PaceAdjust=N&PerMode=PerGame&Period=0&PlayerID=#{@playerid_array[0]}&PlusMinus=N&Rank=N&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&VsConference=&VsDivision=")
+     
+     a = player0_dashboard_month.body
+     b = a["resultSets"]
+     
+     c = b[3] #specific array for month data
+     
+     d = c["headers"]
+     e = c["rowSet"]
 
-       @Player0Monthdata = []
+     @Player0Monthdata = []
+      "ZIPPING!!"
+     e.each do |row|
+      hash = Hash[*d.zip(row).flatten]
+      # keys_to_delete.each do |key|
+      #   hash.delete(key)
+      # end
+      @Player0Monthdata << hash 
+     end
+     p "Month DATA:"
+     p @Player0Monthdata
+  #highchart test 2
+     player0_pts_array = []
+     player0_reb_array = []
+     player0_ast_array = []
+     player0_stl_array = []
+     player0_blk_array = []
+     @Player0Monthdata.each do |month|
+      player0_pts_array << month["PTS"]
+      player0_reb_array << month["REB"]
+    end
+  p player0_pts_array
+
+     @chart = LazyHighCharts::HighChart.new('pts_line') do |f|
+       f.chart({ type: 'line',
+                 marginRight: 130,
+                 marginBottom: 25 })
+       f.title({  text: 'Monthly Average Scoring',
+                  x: -20
+       })
+       # f.data({
+       #  table: 'ptstable'
+       #  })
+       f.xAxis({
+          categories: ['Oct', 'Nov', 'Dec','Jan', 'Feb', 'Mar', 'Apr'],
+       })
+       f.yAxis({
+         # title: {
+         #   text: 'Temperature (°C)'
+         # },
+         plotLines: [{
+           value: 0,
+           width: 1,
+           color: '#808080'
+         }]
+       })
+       # f.tooltip({
+       #   valueSuffix: '°C'
+       # })
+       f.legend({
+         layout: 'vertical',
+         align: 'right',
+         verticalAlign: 'top',
+         x: -10,
+         y: 10,
+         borderWidth: 0
+       })
+       # f.subtitle({
+       #   text: 'Source: WorldClimate.com',
+       #   x: -20
+       # })
+       f.series({
+         name: "Points",
+         data: player0_pts_array
+       })
+       f.series({
+        name: "Rebounds",
+        data: player0_reb_array   
+        })
+     end
+
+  end #end leadersmonthly
+
+  def player
+#NBA.com common player data
+    player_data = Unirest.get("http://stats.nba.com/stats/commonplayerinfo?LeagueID=00&PlayerID=101108&SeasonType=Regular+Season")
+
+    a = player_data.body
+    b = a["resultSets"]
+    c = b[0]
+    d = c["headers"]
+    e = c["rowSet"]
+
+    @playerdata = []
+     "ZIPPING!!"
+    e.each do |row|
+     hash = Hash[*d.zip(row).flatten]
+     
+     @playerdata << hash 
+    end
+    p "player DATA:"
+    p @playerdata
+#NBA.com player dashboard totals
+    player_dashboard_totals = Unirest.get("http://stats.nba.com/stats/playerdashboardbygeneralsplits?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PaceAdjust=N&PerMode=Totals&Period=0&PlayerID=101108&PlusMinus=N&Rank=N&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&VsConference=&VsDivision=")
+    a = player_dashboard_totals.body
+    b = a["resultSets"]
+    
+    c = b[0] #specific array for totals
+    
+    d = c["headers"]
+    e = c["rowSet"]
+
+    @PlayerTotalsdata = []
+     "ZIPPING!!"
+    e.each do |row|
+     hash = Hash[*d.zip(row).flatten]
+     # keys_to_delete.each do |key|
+     #   hash.delete(key)
+     # end
+     @PlayerTotalsdata << hash 
+    end
+    p "totals DATA:"
+    p @PlayerTotalsdata
+#Player monthly data
+      player_dashboard_month = Unirest.get("http://stats.nba.com/stats/playerdashboardbygeneralsplits?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PaceAdjust=N&PerMode=PerGame&Period=0&PlayerID=101108&PlusMinus=N&Rank=N&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&VsConference=&VsDivision=")
+      a = player_dashboard_month.body
+      b = a["resultSets"]
+
+      c = b[3] #specific array for monthly avg
+
+      d = c["headers"]
+      e = c["rowSet"]
+       @PlayerMonthdata = []
         "ZIPPING!!"
        e.each do |row|
         hash = Hash[*d.zip(row).flatten]
         # keys_to_delete.each do |key|
         #   hash.delete(key)
         # end
-        @Player0Monthdata << hash 
+        @PlayerMonthdata << hash 
        end
        p "Month DATA:"
-       p @Player0Monthdata
+       p @PlayerMonthdata
     #highchart test 2
-       player0_pts_array = []
-       @Player0Monthdata.each do |month|
-        player0_pts_array << month["PTS"]
+       player_pts_array = []
+       player_reb_array = []
+       player_ast_array = []
+       player_stl_array = []
+       player_blk_array = []
+       @PlayerMonthdata.each do |month|
+        player_pts_array << month["PTS"]
+        player_reb_array << month["REB"]
+        player_ast_array << month["AST"]
+        player_stl_array << month["STL"]
+        player_blk_array << month["BLK"]
       end
-    p player0_pts_array
 
-       @chart = LazyHighCharts::HighChart.new('pts_line') do |f|
+       @monthchart = LazyHighCharts::HighChart.new('pts_line') do |f|
          f.chart({ type: 'line',
                    marginRight: 130,
                    marginBottom: 25 })
-         f.title({  text: 'Monthly Average Scoring',
+         f.title({  text: 'Monthly Averages',
                     x: -20
          })
          # f.data({
@@ -370,24 +492,48 @@ p name_array
          #   x: -20
          # })
          f.series({
-           name: @name_array[0],
-           data: player0_pts_array
+           name: "Points",
+           data: player_pts_array
          })
          f.series({
-          
+          name: "Rebounds",
+          data: player_reb_array   
           })
-       
-         # f.series({
-         #     name: 'London',
-         #     data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-         # })
+         f.series({
+          name: "Assists",
+          data: player_ast_array   
+          })
+         f.series({
+          name: "Steals",
+          data: player_stl_array   
+          })
+         f.series({
+          name: "Blocks",
+          data: player_blk_array   
+          })
        end
 
-  end #end leadersmonthly
+#NBA.com player's team data
+    player_team_data = Unirest.get("http://stats.nba.com/stats/teamdashboardbygeneralsplits?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PaceAdjust=N&PerMode=Totals&Period=0&PlusMinus=N&Rank=N&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&TeamID=#{@playerdata[0]["TEAM_ID"]}&VsConference=&VsDivision=")
+    p "TEAM PLAYER DATA"
+    p player_team_data
+    a = player_team_data.body
+    b = a["resultSets"]
+    c = b[0] #overall team dashboard
+    d = c["headers"]
+    e = c["rowSet"]
 
-  def player
+    @playerteamdata = []
+     "ZIPPING!!"
+    e.each do |row|
+     hash = Hash[*d.zip(row).flatten]
+     
+     @playerteamdata << hash 
+     end
+    p "player team DATA:"
+    p @playerteamdata
 
-    #NBA.com passes made 
+#NBA.com passes made 
     @player_passes = Unirest.get("http://stats.nba.com/stats/playerdashptpass?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&Month=0&OpponentTeamID=0&Outcome=&PerMode=Totals&Period=0&PlayerID=101108&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&TeamID=0&VsConference=&VsDivision=")
      @player_passes
 
@@ -421,13 +567,8 @@ p name_array
       @data
 
 # player passes received
-     # @player_passes_rec = Unirest.get("http://stats.nba.com/stats/playerdashptpass?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&Month=0&OpponentTeamID=0&Outcome=&PerMode=Totals&Period=0&PlayerID=101108&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&TeamID=0&VsConference=&VsDivision=")
-      
-      # a = @player_passes_rec.body
 
-      # b = a["resultSets"]
-
-      recc = b[1] #gets all PassesMade from playerA to teammates
+      recc = b[1] #gets all PassesReceived by playerA from teammates
 
       recd = recc["headers"]
 
@@ -451,7 +592,7 @@ p name_array
        p "DATA:"
        p @ReceivedData
 
-     #team roster with hardcoded team id
+#team roster with hardcoded team id
      client = NbaStats::Client.new
      my_resource = client.common_team_roster("1610612746","2014-15")
      my_result_set = my_resource.common_team_roster
@@ -504,8 +645,7 @@ p name_array
          reb_array << game["REB"]
          pts_array << game["PTS"]
          opp_array << game["MATCHUP"]
-       end
-      
+       end    
 
        #highchart test
        @bar = LazyHighCharts::HighChart.new('column') do |f|
@@ -518,8 +658,7 @@ p name_array
          f.series(:name=>'REB',:data=> reb_array )
          f.series(:name=>'PTS',:data=>pts_array)
 
-
-         f.title({ :text=>"Player Game Log"})
+         f.title({ :text=>""})
          f.legend({
             align: 'right',
             verticalAlign: 'top',
@@ -531,20 +670,13 @@ p name_array
             allowDecimals: false,
             title: {
               text: 'Games'
-            },
-            # categories: opp_array,
-            # labels: {
-            #   staggerLines: 2
-
-            # }
+            }
+            
           }) 
           f.tooltip({
             pointFormat: '{series.name}: <b style="color:{series.color}">{point.y}</b><br/>',
             shared: true
           })
-           ###  Options for Bar
-           ### f.options[:chart][:defaultSeriesType] = "bar"
-           ### f.plot_options({:series=>{:stacking=>"normal"}}) 
 
            ## or options for column
            f.options[:chart][:defaultSeriesType] = "column"

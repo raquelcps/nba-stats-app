@@ -5,3 +5,13 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+players = Unirest.get("http://stats.nba.com/stats/commonallplayers?IsOnlyCurrentSeason=0&LeagueID=00&Season=2014-15").body["resultSets"][0]["rowSet"]
+
+players.each do |player_array|
+  Player.create(:name => player_array[1], :person_id => player_array[0]) if player_array[2] == 1
+end
+
+puts "Done!"
+
+

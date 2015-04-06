@@ -1,117 +1,118 @@
 <script type="text/javascript" src="http://visjs.org/dist/vis.js"></script>
 <link href="http://visjs.org/dist/vis.css" rel="stylesheet" type="text/css" />
-<div class="container">
-  <div class="row">
-    <div class="page-header">
-      <div class="dropdown">
-      <p>Select a team</p>
-        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-          Dropdown
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-         
-        </ul>
-      </div>
-    </div> <!-- End page-header -->
+
+
+
+  <div class="row"
+  style="-moz-box-shadow: 1px 1px 3px 2px #f0af6d;
+  -webkit-box-shadow: 1px 1px 3px 2px #f0af6d;
+  box-shadow:         1px 1px 3px 2px #f0af6d; height:150px;">
+    <div style="height:80px;">
+      <h3>2014-15 PLAYER PROFILE</h3>
+    </div>
+    <div>
+      <a class="btn btn-default" href="#" role="button">Traditional</a>
+      <a class="btn btn-default" href="#" role="button">Assists</a>
+      <a class="btn btn-default" href="#" role="button">Passes</a>
+      <a class="btn btn-default" href="#" role="button">Individual</a>
+      <a class="btn btn-default" href="#" role="button">Team Overview</a>
+    </div>
   </div>
 
-  <div class="row">
-      <div class="col-md-3">
-        <img src="http://stats.nba.com/media/players/230x185/<%= @data[0]["PLAYER_ID"] %>.png" width="200px">
-      </div>
-      <div class="col-md-6">
-        <h3><%= @data[0]["PLAYER_NAME_LAST_FIRST"] %></h3>
-        <h5>Los Angeles Clippers</h5>
-      </div>
-  </div>
-
-  <div class="row" style="height:30px;">
-  </div>
-
-  <div class="row">
-    <div class="col-md-4">
-      <h4>ASSISTS MADE</h4>
-
-      <table class="table" style="font-size: 12px;">
-        <thead>
-          <th>To</th>
-          <th>#</th>
-          <th>FG</th>
-          <th>FGA</th>
-          <th>FG%</th>
-        </thead>
-        
-        <% @data.sort_by { |hash| hash["AST"]}.reverse. each do |hash| %>
-       
-        <tbody>
-          <td><%= hash["PASS_TO"] %>
-          </td>
-          <td><%= hash["AST"] %>
-          </td>
-          <td><%= hash["FGM"] %>
-          </td>
-          <td><%= hash["FGA"] %>
-          </td>
-          <td><%= hash["FG_PCT"] %>
-          </td>
-        </tbody>
-        <% end %>
-      </table>
+  <div class="row" style="margin: 20px 0px">
+<!-- Player -->
+    <div class="col-md-3">
+      <img src="http://stats.nba.com/media/players/230x185/<%= @data[0]["PLAYER_ID"] %>.png" width="">
+      <h3><%= @playerdata[0]["DISPLAY_FIRST_LAST"] %></h3>
+      <h5><%= @playerdata[0]["TEAM_CITY"] %> <%= @playerdata[0]["TEAM_NAME"] %></h5>
+      <h5><%= @playerdata[0]["POSITION"] %></h5>
+      <h5><%= @playerdata[0]["FROM_YEAR"] %></h5>
     </div>
 
-    <div class="col-md-7">
-      <div id="mynetwork"></div> 
-     <!--  <select id="dropdownID">
-          <option value="continuous">continuous</option>
-          <option value="discrete">discrete</option>
-      </select> -->
-      <div class="selectors">
-        menus to select nodes
+    <div class="col-md-9">
+      <div class="col-md-6">
+        <div id="mynetwork"></div> 
       </div>
-      <div class="team" style="margin: 20px 0px 10px;">
-        C Paul: X Assists  Team: Assists
-        <div class="progress">
-          <div class="progress-bar" role="progressbar" aria-valuenow="10*2" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-            60%
-          </div>
+      <div class="col-md-6">
+        <div id="passreceivednetwork"></div>
+        <div class="selectors">
+          menus to select nodes
         </div>
       </div>
-    </div> <!--End col-md-7-->
-  </div>
 
-  <div class="row">
-    <div class="col-md-4">
-      <h4>ASSISTS FROM</h4>
+      <div class="col-md-6">
+        <h4>ASSISTS MADE</h4>
+
         <table class="table" style="font-size: 12px;">
           <thead>
             <th>To</th>
-            <th>#</th>
+            <th>AST</th>
+            <th>FG</th>
+            <th>FGA</th>
+            <th>FG%</th>
           </thead>
           
-          <% @ReceivedData.sort_by { |hash| hash["AST"]}.reverse. each do |hash| %>
+          <% @data.sort_by { |hash| hash["AST"]}.reverse. each do |hash| %>
          
           <tbody>
             <td><%= hash["PASS_TO"] %>
             </td>
             <td><%= hash["AST"] %>
             </td>
+            <td><%= hash["FGM"] %>
+            </td>
+            <td><%= hash["FGA"] %>
+            </td>
+            <td><%= hash["FG_PCT"] %>
+            </td>
           </tbody>
           <% end %>
         </table>
+      </div>
+    
+      <div class="col-md-6">
+        <h4>ASSISTS RECEIVED</h4>
+          <table class="table" style="font-size: 12px;">
+            <thead>
+              <th>From</th>
+              <th>AST</th>
+            </thead>
+            
+            <% @ReceivedData.sort_by { |hash| hash["AST"]}.reverse. each do |hash| %>
+           
+            <tbody>
+              <td><%= hash["PASS_TO"] %>
+              </td>
+              <td><%= hash["AST"] %>
+              </td>
+            </tbody>
+            <% end %>
+          </table>
+      </div>    
+    </div><!--  End col-md-8 -->
 
-    </div>
-    <div class="col-md-7">
-      <div id="passreceivednetwork"></div>
-    </div>
   </div>
 
   <div class="row">
+  </div>
+
+  <div class="row">
+    <div class="team" style="margin: 20px 0px 10px;">
+      C Paul: <%= @PlayerTotalsdata[0]["AST"] %> Assists  Team:<%= @playerteamdata[0]["AST"] %> Assists
+    </div>
+    <div class="progress">
+      <div class="progress-bar" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+        HOW DO I DIVIDE TO GET PERCENTAGE?
+        <%= @PlayerTotalsdata[0]["AST"] %>
+        <%= @playerteamdata[0]["AST"] %> 
+        
+      </div>
+    </div>
     Current Season Game Log
     <!--highchart-->
     <%= high_chart("my_bar_div", @bar) %>
-
   </div>
+  
   <div class="row">
     Current team
     <% @rosters.each do |roster| %>
@@ -159,8 +160,8 @@
            
             widthMax: 20,
           },
-          width: '600px',
-          height: '600px',
+          width: '350px',
+          height: '350px',
         };
 // var dropdown = document.getElementById("dropdownID");
 // dropdown.onchange = update;
@@ -207,8 +208,8 @@
             
              widthMax: 20,
            },
-           width: '600px',
-           height: '600px',
+           width: '350px',
+           height: '350px',
          };
  // var dropdown = document.getElementById("dropdownID");
  // dropdown.onchange = update;
