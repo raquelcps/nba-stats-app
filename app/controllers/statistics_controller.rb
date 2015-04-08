@@ -396,8 +396,8 @@ p name_array
      
      @playerdata << hash 
     end
-    p "player DATA:"
-    p @playerdata
+    # p "player DATA:"
+    # p @playerdata
 #NBA.com player dashboard totals
     player_dashboard_totals = Unirest.get("http://stats.nba.com/stats/playerdashboardbygeneralsplits?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PaceAdjust=N&PerMode=Totals&Period=0&PlayerID=101108&PlusMinus=N&Rank=N&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&VsConference=&VsDivision=")
     a = player_dashboard_totals.body
@@ -417,8 +417,8 @@ p name_array
      # end
      @PlayerTotalsdata << hash 
     end
-    p "totals DATA:"
-    p @PlayerTotalsdata
+    # p "totals DATA:"
+    # p @PlayerTotalsdata
 #Player monthly data
       player_dashboard_month = Unirest.get("http://stats.nba.com/stats/playerdashboardbygeneralsplits?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PaceAdjust=N&PerMode=PerGame&Period=0&PlayerID=101108&PlusMinus=N&Rank=N&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&VsConference=&VsDivision=")
       a = player_dashboard_month.body
@@ -437,8 +437,8 @@ p name_array
         # end
         @PlayerMonthdata << hash 
        end
-       p "Month DATA:"
-       p @PlayerMonthdata
+       # p "Month DATA:"
+       # p @PlayerMonthdata
     #highchart test 2
        player_pts_array = []
        player_reb_array = []
@@ -515,8 +515,8 @@ p name_array
 
 #NBA.com player's team data
     player_team_data = Unirest.get("http://stats.nba.com/stats/teamdashboardbygeneralsplits?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PaceAdjust=N&PerMode=Totals&Period=0&PlusMinus=N&Rank=N&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&TeamID=#{@playerdata[0]["TEAM_ID"]}&VsConference=&VsDivision=")
-    p "TEAM PLAYER DATA"
-    p player_team_data
+    # p "TEAM PLAYER DATA"
+    # p player_team_data
     a = player_team_data.body
     b = a["resultSets"]
     c = b[0] #overall team dashboard
@@ -530,8 +530,8 @@ p name_array
      
      @playerteamdata << hash 
      end
-    p "player team DATA:"
-    p @playerteamdata
+    # p "player team DATA:"
+    # p @playerteamdata
 
 #NBA.com passes made 
     @player_passes = Unirest.get("http://stats.nba.com/stats/playerdashptpass?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&Month=0&OpponentTeamID=0&Outcome=&PerMode=Totals&Period=0&PlayerID=101108&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&TeamID=0&VsConference=&VsDivision=")
@@ -549,11 +549,11 @@ p name_array
 
      g = e.each do |row|
       row.each do |item| 
-         p item
+         
       end
      end
 #How do i do this so that the first row references playerA only, but the following nodes are teammates passed to
-     keys_to_delete = ["TEAM_NAME", "TEAM_ID", "PASS_TYPE", "G", "FREQUENCY", "PASS"]
+     keys_to_delete = ["TEAM_NAME", "TEAM_ID", "PASS_TYPE", "G", "FREQUENCY"]
      @data = []
       "ZIPPING!!"
      e.each do |row|
@@ -565,6 +565,13 @@ p name_array
      end
       "DATA:"
       @data
+
+      #Added each do for player total passes
+      @player_total_passes = []
+      @data.each do |passes|
+        @player_total_passes << passes["PASS"]
+      end
+      p @player_total_passes
 
 # player passes received
 
@@ -581,7 +588,7 @@ p name_array
       # end
 
       @ReceivedData = []
-       p "ZIPPING!!"
+        "ZIPPING!!"
       rece.each do |row|
        hash = Hash[*d.zip(row).flatten]
        # keys_to_delete.each do |key|
@@ -589,8 +596,8 @@ p name_array
        # end
        @ReceivedData << hash 
       end
-       p "DATA:"
-       p @ReceivedData
+       # p "DATA:"
+       # p @ReceivedData
 
 #team roster with hardcoded team id
      client = NbaStats::Client.new
@@ -608,7 +615,7 @@ p name_array
       a = @player_game_log.body
 
       b = a["resultSets"]
-      p b
+      
 
       c = b[0]
       
@@ -626,7 +633,7 @@ p name_array
        @player_game_log_data << hash 
       end
        "DATA:"
-       p @player_game_log_data
+       
 # Each thru player game log data to find key and values for highchart series
        pf_array = []
        to_array = []
@@ -681,8 +688,111 @@ p name_array
            ## or options for column
            f.options[:chart][:defaultSeriesType] = "column"
            f.plot_options({:column=>{:stacking=>"normal"}})
-         end  
+         end 
 
+# Team Passing Totals 
+  team_passing = Unirest.get("http://stats.nba.com/stats/teamdashptpass?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PaceAdjust=N&PerMode=Totals&Period=0&PlusMinus=N&Rank=N&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&TeamID=1610612746&VsConference=&VsDivision=")
+  a = team_passing.body
+  b = a["resultSets"]
+  c = b[0]
+  d = c["headers"]
+  e = c["rowSet"]
+  p team_passing
+  @team_passes_per_player = []
+  e.each do |row|
+    hash = Hash[*d.zip(row).flatten]
+         @team_passes_per_player << hash 
+  end
+  @team_passes_total = []
+  # @team_assist_total = []
+  @team_passes_per_player.each do |player|
+    @team_passes_total << player["PASS"]
+    # @team_assist_total << player["AST"]
+  end
+p @team_passes_total
+
+#Team touches
+  team_touches = Unirest.get("http://stats.nba.com/js/data/sportvu/2014/touchesTeamData.json")
+  a = team_touches.body
+  b = a["resultSets"]
+  p "TEAM RESULT SETS"
+  p b
+  c = b[0]
+  p "array 0"
+  p c
+  d = c["headers"]
+  e = c["rowSet"]
+
+  team_touches_array = []
+  e.each do |row|
+    hash = Hash[*d.zip(row).flatten]
+         team_touches_array << hash 
+  end
+
+  @team_touches_total = team_touches_array.select {|team| team["TEAM_ID"].to_i == @playerdata[0]["TEAM_ID"] }
+
+#Player Touches
+  player_touches = Unirest.get("http://stats.nba.com/js/data/sportvu/2014/touchesData.json").body["resultSets"][0]["rowSet"]
+  p "PLAYER ROW set"  
+  p player_touches
+
+  @player_touches_total = player_touches.select{ |player| player[0].to_i == @playerdata[0]["PERSON_ID"] }
+  p "Worked"
+  p @player_touches_total
+#highcarts pie
+  @chart = LazyHighCharts::HighChart.new('pie') do |f|
+    f.chart({ :defaultSeriesType=>"pie"} )   
+    f.tooltip({
+      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.percentage:.1f}%</b> of {series.name}'
+    })
+    series = { 
+      :type=> 'pie',
+      :name=> 'touches',
+      :data=> [
+        {
+          name:'Passes',
+          y: @player_total_passes.inject(:+),
+          drilldown: 'passes'
+        }, {
+         :name=> 'Field Goal Attempts',    
+         :y=> @PlayerTotalsdata[0]["FGA"],
+         :drilldown=> 'field goal attempts'
+        }, {
+          name: 'Turnovers',
+          y: @PlayerTotalsdata[0]["TOV"]    
+        }, { 
+          name: 'Other',
+          y: @player_touches_total[0][15] - ((@player_total_passes.inject(:+)) + (@PlayerTotalsdata[0]["FGA"]) + (@PlayerTotalsdata[0]["TOV"]))
+        }  
+      ]
+    }     
+    f.series(series) 
+#DRILLDOWN           
+    f.drilldown(
+      series = {
+        id: 'passes',
+        data: [
+          ["General", 100],
+          ["Assist", 50]
+        ]
+      }
+    )
+
+    f.options[:title][:text] = "Player Touches #{@player_touches_total[0][15]}"
+    # f.legend(:layout=> 'vertical',:style=> {:left=> 'auto', :bottom=> 'auto',:right=> '50px',:top=> '100px'}) 
+    f.plot_options(
+      :pie=>{
+        dataLabels: {
+          enabled: true,
+          format: '<b>{point.name}</b>: {point.y} '              
+        }
+      }
+    )       
+  end
+
+  
+  
   end #player
 
   def team

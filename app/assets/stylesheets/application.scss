@@ -1,7 +1,17 @@
 // "bootstrap-sprockets" must be imported before "bootstrap" and "bootstrap/variables"
 @import "bootstrap-sprockets";
 @import "bootstrap";
-#mynetwork {
+#assistmadenetwork {
+  width: 350px;
+  height: 350px;
+  border: 1px solid lightgray;
+}
+#assistreceivednetwork {
+  width: 350px;
+  height: 350px;
+  border: 1px solid lightgray;
+}
+#passmadenetwork {
   width: 350px;
   height: 350px;
   border: 1px solid lightgray;
