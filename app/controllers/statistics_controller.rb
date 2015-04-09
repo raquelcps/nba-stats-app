@@ -561,7 +561,7 @@ p  @player_ssn_avg_array
      f.options[:chart][:defaultSeriesType] = "column"
   end
 
-#NBA.com player's team data
+#NBA.com player's team totals data
     player_team_data = Unirest.get("http://stats.nba.com/stats/teamdashboardbygeneralsplits?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PaceAdjust=N&PerMode=Totals&Period=0&PlusMinus=N&Rank=N&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&TeamID=#{@playerdata[0]["TEAM_ID"]}&VsConference=&VsDivision=")
     # p "TEAM PLAYER DATA"
     # p player_team_data
@@ -578,8 +578,47 @@ p  @player_ssn_avg_array
      
      @playerteamdata << hash 
      end
-    # p "player team DATA:"
-    # p @playerteamdata
+    
+    # @playerteamdata.each do |stat|
+    #   @playerteam_avg_array << (stat['PTS'].to_f / stat['GP']).round(1)
+    #   @playerteam_avg_array << (stat['FGM'].to_f / stat['GP']).round(1)
+    #   @playerteam_avg_array << (stat['FGA'].to_f / stat['GP']).round(1)
+    # end
+
+    @player_contribute_team_array = []
+    @playerteamdata.each do |stat|
+      @player_contribute_team_array << ( @player_ssn_avg_array[0] / (stat['PTS'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << ( @player_ssn_avg_array[1] / (stat['FGM'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << ( @player_ssn_avg_array[2] / (stat['FGA'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << ( @player_ssn_avg_array[3] / (stat['FG_PCT'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << ( @player_ssn_avg_array[4] / (stat['FG3M'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << ( @player_ssn_avg_array[5] / (stat['FG3A'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << ( @player_ssn_avg_array[6] / (stat['FG3_PCT'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << ( @player_ssn_avg_array[7] / (stat['FTM'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << ( @player_ssn_avg_array[8] / (stat['FTA'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << ( @player_ssn_avg_array[9] / (stat['FT_PCT'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << ( @player_ssn_avg_array[10] / (stat['OREB'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << ( @player_ssn_avg_array[11] / (stat['DREB'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << ( @player_ssn_avg_array[12] / (stat['REB'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << ( @player_ssn_avg_array[13] / (stat['AST'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << ( @player_ssn_avg_array[14] / (stat['TOV'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << ( @player_ssn_avg_array[15] / (stat['STL'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << ( @player_ssn_avg_array[16] / (stat['BLK'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << ( @player_ssn_avg_array[17] / (stat['BLKA'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << ( @player_ssn_avg_array[18] / (stat['PF'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << ( @player_ssn_avg_array[19] / (stat['PFD'].to_f / stat['GP']).round(1) ).round(3) * 100
+    end
+
+    p @player_contribution_team_avg_array
+#Highchart combo chart player contribution to team
+@player_contribution_chart = LazyHighCharts::HighChart.new('player_contribution_graph') do |f|
+      f.title({ :text=>"Combination chart"})
+      f.options[:xAxis][:categories] = ['PTS', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD']
+      f.labels(:items=>[:html=>"Total fruit consumption", :style=>{:left=>"40px", :top=>"8px", :color=>"black"} ])      
+      f.series(:type=> 'column',:name=> 'Player',:data=> @player_ssn_avg_array)
+      
+      f.series(:type=> 'spline',:name=> 'Average', :data=> @player_contribute_team_array)
+end
 
 #NBA.com passes made 
     @player_passes = Unirest.get("http://stats.nba.com/stats/playerdashptpass?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&Month=0&OpponentTeamID=0&Outcome=&PerMode=Totals&Period=0&PlayerID=101108&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&TeamID=0&VsConference=&VsDivision=")
