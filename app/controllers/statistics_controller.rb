@@ -419,7 +419,7 @@ p name_array
     end
     # p "totals DATA:"
     # p @PlayerTotalsdata
-#Player monthly data
+#Player monthly average data
       player_dashboard_month = Unirest.get("http://stats.nba.com/stats/playerdashboardbygeneralsplits?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PaceAdjust=N&PerMode=PerGame&Period=0&PlayerID=101108&PlusMinus=N&Rank=N&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&VsConference=&VsDivision=")
       a = player_dashboard_month.body
       b = a["resultSets"]
@@ -437,9 +437,20 @@ p name_array
         # end
         @PlayerMonthdata << hash 
        end
-       # p "Month DATA:"
-       # p @PlayerMonthdata
-    #highchart test 2
+#Player season avg
+      seasonAvg = b[0]
+      seasonAvgd = seasonAvg["headers"]
+      seasonAvge = seasonAvg["rowSet"]
+      
+      @PlayerSeasonavg = []
+      seasonAvge.each do |row|
+        hash = Hash[*d.zip(row).flatten]
+
+      @PlayerSeasonavg << hash 
+      end
+      p "playerssn average"
+      p @PlayerSeasonavg
+#Create arrays for monthly stat averages
        player_pts_array = []
        player_reb_array = []
        player_ast_array = []
@@ -452,7 +463,33 @@ p name_array
         player_stl_array << month["STL"]
         player_blk_array << month["BLK"]
       end
-
+#Create array for season stat averages
+       @player_ssn_avg_array = []
+       
+       @PlayerSeasonavg.each do |stat|
+        @player_ssn_avg_array << stat["PTS"]
+        @player_ssn_avg_array << stat["FGM"]
+        @player_ssn_avg_array << stat["FGA"]
+        @player_ssn_avg_array << stat["FG_PCT"]
+        @player_ssn_avg_array << stat["FG3M"]
+        @player_ssn_avg_array << stat["FG3A"]
+        @player_ssn_avg_array << stat["FG3_PCT"]
+        @player_ssn_avg_array << stat["FTM"]
+        @player_ssn_avg_array << stat["FTA"]
+        @player_ssn_avg_array << stat["FT_PCT"]
+        @player_ssn_avg_array << stat["OREB"]
+        @player_ssn_avg_array << stat["DREB"]
+        @player_ssn_avg_array << stat["REB"]
+        @player_ssn_avg_array << stat["AST"]
+        @player_ssn_avg_array << stat["TOV"]
+        @player_ssn_avg_array << stat["STL"]
+        @player_ssn_avg_array << stat["BLK"]
+        @player_ssn_avg_array << stat["BLKA"]
+        @player_ssn_avg_array << stat["PF"]
+        @player_ssn_avg_array << stat["PFD"]
+      end
+p  @player_ssn_avg_array 
+#highchart with monthly averages
        @monthchart = LazyHighCharts::HighChart.new('pts_line') do |f|
          f.chart({ type: 'line',
                    marginRight: 130,
@@ -460,25 +497,19 @@ p name_array
          f.title({  text: 'Monthly Averages',
                     x: -20
          })
-         # f.data({
-         #  table: 'ptstable'
-         #  })
+         
          f.xAxis({
             categories: ['Oct', 'Nov', 'Dec','Jan', 'Feb', 'Mar', 'Apr'],
          })
          f.yAxis({
-           # title: {
-           #   text: 'Temperature (°C)'
-           # },
+           
            plotLines: [{
              value: 0,
              width: 1,
              color: '#808080'
            }]
          })
-         # f.tooltip({
-         #   valueSuffix: '°C'
-         # })
+         
          f.legend({
            layout: 'vertical',
            align: 'right',
@@ -487,10 +518,7 @@ p name_array
            y: 10,
            borderWidth: 0
          })
-         # f.subtitle({
-         #   text: 'Source: WorldClimate.com',
-         #   x: -20
-         # })
+         
          f.series({
            name: "Points",
            data: player_pts_array
@@ -512,6 +540,26 @@ p name_array
           data: player_blk_array   
           })
        end
+#Highchart player season averages
+@player_average_bar = LazyHighCharts::HighChart.new('player_avg_chart') do |f|
+ 
+  f.series(:name=>'averages',:data=>
+    @player_ssn_avg_array )     
+  f.title({ :text=>"Player Season Averages"})
+  f.legend({
+     enabled: false
+   }) 
+   f.xAxis({
+     allowDecimals: false,
+     categories: ['PTS', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD']
+   }) 
+   f.tooltip({
+     pointFormat: '{series.name}: <b style="color:{series.color}">{point.y}</b><br/>',
+     shared: true
+   })
+    #  Options for Bar
+     f.options[:chart][:defaultSeriesType] = "column"
+  end
 
 #NBA.com player's team data
     player_team_data = Unirest.get("http://stats.nba.com/stats/teamdashboardbygeneralsplits?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PaceAdjust=N&PerMode=Totals&Period=0&PlusMinus=N&Rank=N&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&TeamID=#{@playerdata[0]["TEAM_ID"]}&VsConference=&VsDivision=")
@@ -571,7 +619,7 @@ p name_array
       @data.each do |passes|
         @player_total_passes << passes["PASS"]
       end
-      p @player_total_passes
+      # p @player_total_passes
 
 # player passes received
 
@@ -697,7 +745,7 @@ p name_array
   c = b[0]
   d = c["headers"]
   e = c["rowSet"]
-  p team_passing
+  # p team_passing
   @team_passes_per_player = []
   e.each do |row|
     hash = Hash[*d.zip(row).flatten]
@@ -709,17 +757,17 @@ p name_array
     @team_passes_total << player["PASS"]
     # @team_assist_total << player["AST"]
   end
-p @team_passes_total
+# p @team_passes_total
 
 #Team touches
   team_touches = Unirest.get("http://stats.nba.com/js/data/sportvu/2014/touchesTeamData.json")
   a = team_touches.body
   b = a["resultSets"]
   p "TEAM RESULT SETS"
-  p b
+  # p b
   c = b[0]
   p "array 0"
-  p c
+  # p c
   d = c["headers"]
   e = c["rowSet"]
 
@@ -733,12 +781,12 @@ p @team_passes_total
 
 #Player Touches
   player_touches = Unirest.get("http://stats.nba.com/js/data/sportvu/2014/touchesData.json").body["resultSets"][0]["rowSet"]
-  p "PLAYER ROW set"  
-  p player_touches
+  # p "PLAYER ROW set"  
+  # p player_touches
 
   @player_touches_total = player_touches.select{ |player| player[0].to_i == @playerdata[0]["PERSON_ID"] }
-  p "Worked"
-  p @player_touches_total
+  # p "Worked"
+  # p @player_touches_total
 #highcarts pie
   @chart = LazyHighCharts::HighChart.new('pie') do |f|
     f.chart({ :defaultSeriesType=>"pie"} )   
@@ -790,7 +838,7 @@ p @team_passes_total
       }
     )       
   end
-
+#Testing
   
   
   end #player

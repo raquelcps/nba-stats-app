@@ -20,3 +20,4 @@
 //= require highcharts/highcharts-more
 //= require highcharts/modules/drilldown
 //= require highcharts/modules/exporting
+//= require tab
