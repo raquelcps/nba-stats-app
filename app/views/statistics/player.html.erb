@@ -2,7 +2,7 @@
 <link href="http://visjs.org/dist/vis.css" rel="stylesheet" type="text/css" />
 
 <!-- Player Navigation -->
-  <div class="row"
+  <!-- <div class="row"
   style="-moz-box-shadow: 0px #f0af6d;
   -webkit-box-shadow: 0px #f0af6d;
   box-shadow:         0px #f0af6d; height:150px;">
@@ -16,7 +16,7 @@
       <a class="btn btn-default" href="#" role="button">Individual</a>
       <a class="btn btn-default" href="#" role="button">Team Overview</a>
     </div>
-  </div>
+  </div> -->
 <!-- End Player Navigation -->
 
   <div class="row" style="margin: 20px 0px">
@@ -31,251 +31,268 @@
   <!-- End Player Info -->
   <!-- Main Player Stat Section -->
     <div class="col-md-9">
-      <div>
-      Current Season Game Log
-      <!--highchart-->
-      <%= high_chart("game_log", @bar) %> 
-     </div>
-     <div>
-      Monthly Averages
-      <%= high_chart("my_bar_div", @monthchart) %> 
-    </div>
+      <!-- Tab Panel -->
+        <div role="tabpanel">
 
-    <div class="row">
-      Current team
-      <% @rosters.each do |roster| %>
-        <p><%= roster[:player] %></p>
-      <% end %>
-    </div> 
-  <!-- End Main Player Stat Section -->
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Traditional</a></li>
+            <li role="presentation"><a href="#assists" aria-controls="assists" role="tab" data-toggle="tab">Assists</a></li>
+            <li role="presentation"><a href="#passes" aria-controls="passes" role="tab" data-toggle="tab">Passes</a></li>
+            <li role="presentation"><a href="#team" aria-controls="team" role="tab" data-toggle="tab">Team</a></li>
+          </ul>
+
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="home">
+  <!-- Player Traditional Section -->
+              <div>
+              Current Season Game Log
+              <!--highchart-->
+              <%= high_chart("game_log", @bar) %> 
+             </div>
+             <div>
+              Monthly Averages
+              <%= high_chart("my_bar_div", @monthchart) %> 
+             </div>
+
+             <div class="row">
+              Current team
+              <% @rosters.each do |roster| %>
+                <p><%= roster[:player] %></p>
+              <% end %>
+              </div> 
+          <!-- End Player Traditional Section -->
+            </div> <!-- End tabpanel -->
+            
+            <div role="tabpanel" class="tab-pane" id="assists">
+              <!-- Player Assist Section -->
+                <div class="row">
+                  ASSISTS
+                </div>
+                <div class="col-md-6">
+                   <div id="assistmadenetwork"></div> 
+                </div>
+                <div class="col-md-6">
+                   <div id="assistreceivednetwork"></div>
+                   <div class="selectors">
+                     menus to select nodes
+                   </div>
+                </div>
+
+                <div class="col-md-6">
+                   <h4>ASSISTS MADE</h4>
+                   <table class="table" style="font-size: 12px;">
+                     <thead>
+                       <th>To</th>
+                       <th>AST</th>
+                       <th>FG</th>
+                       <th>FGA</th>
+                       <th>FG%</th>
+                     </thead>
+                       
+                     <% @data.sort_by { |hash| hash["AST"]}.reverse. each do |hash| %>
+                    
+                     <tbody>
+                       <td><%= hash["PASS_TO"] %>
+                       </td>
+                       <td><%= hash["AST"] %>
+                       </td>
+                       <td><%= hash["FGM"] %>
+                       </td>
+                       <td><%= hash["FGA"] %>
+                       </td>
+                       <td><%= hash["FG_PCT"] %>
+                       </td>
+                     </tbody>
+                     <% end %>
+                   </table>
+                </div> <!-- End col-md-6 -->
+                 
+                <div class="col-md-6">
+                   <h4>ASSISTS RECEIVED</h4>
+                     <table class="table" style="font-size: 12px;">
+                       <thead>
+                         <th>From</th>
+                         <th>AST</th>
+                       </thead>
+                       
+                       <% @ReceivedData.sort_by { |hash| hash["AST"]}.reverse. each do |hash| %>
+                      
+                       <tbody>
+                         <td><%= hash["PASS_TO"] %>
+                         </td>
+                         <td><%= hash["AST"] %>
+                         </td>
+                       </tbody>
+                       <% end %>
+                     </table>
+                </div> <!-- End col-md-6 -->
+
+                <div class="row">
+                 <h4>PLAYER ASSISTS AS PERCENTAGE OF TEAM TOTAL</h4>
+                </div>
+
+               <div class="row">
+                 <div class="progress">
+                   <div class="progress-bar" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width:  <%= @PlayerTotalsdata[0]['AST'].to_f / @playerteamdata[0]['AST'].to_f * 100 %>%;">      
+                     <%= (@PlayerTotalsdata[0]['AST'].to_f / @playerteamdata[0]['AST'].to_f * 100).to_i %>%        
+                   </div>
+                 </div>
+                 <p><%= @playerdata[0]["DISPLAY_FIRST_LAST"] %>: <%= @PlayerTotalsdata[0]["AST"] %> Assists</p>
+                 <p><%= @playerdata[0]["TEAM_CITY"] %> <%= @playerdata[0]["TEAM_NAME"] %>: <%= @playerteamdata[0]["AST"] %> Assists</p>
+               </div>
+              <!-- End Player Assist Section -->
+
+            </div> <!-- End tabpanel -->
+            
+            <div role="tabpanel" class="tab-pane" id="passes">
+              <!-- Player Pass Section -->
+                 <div class="row">
+                   PASSES
+                 </div>
+                 <div class="col-md-6">
+                    <div id="passmadenetwork"></div> 
+                 </div>
+                 <div class="col-md-6">
+                    <div id="passreceivednetwork"></div>
+                    <div class="selectors">
+                      menus to select nodes
+                    </div>
+                 </div>
+
+                 <div class="col-md-6">
+                  <h4>PASSES MADE</h4>
+                  <table class="table" style="font-size: 12px;">
+                    <thead>
+                      <th>To</th>
+                      <th>PASS</th>
+                    </thead>
+                    <% @data.sort_by { |hash| hash["PASS"]}.reverse. each do |hash| %>
+                   
+                    <tbody>
+                      <td><%= hash["PASS_TO"] %>
+                      </td>
+                      <td><%= hash["PASS"] %>
+                      </td>
+                    </tbody>
+                    <% end %>
+                  </table>  
+                 </div> <!-- End col-md-6 -->
+
+                 <div class="col-md-6">
+                  <h4>PASSES RECEIVED</h4>
+                    <table class="table" style="font-size: 12px;">
+                      <thead>
+                        <th>From</th>
+                        <th>PASS</th>
+                      </thead>
+                      
+                      <% @ReceivedData.sort_by { |hash| hash["PASS"]}.reverse. each do |hash| %>
+                     
+                      <tbody>
+                        <td><%= hash["PASS_TO"] %>
+                        </td>
+                        <td><%= hash["PASS"] %>
+                        </td>
+                      </tbody>
+                      <% end %>
+                    </table>
+                 </div> <!-- End col-md-6 -->
+
+                 <div class="row">
+                  <h4>PLAYER PASSES AS PERCENTAGE OF TEAM TOTAL</h4>
+                 </div>
+
+                 <div class="row">
+                   <div class="progress">
+                     <div class="progress-bar" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width:  <%= @player_total_passes.inject(:+).to_f / @team_passes_total.inject(:+).to_f * 100 %>%;">      
+                       <%= (@player_total_passes.inject(:+).to_f / @team_passes_total.inject(:+).to_f * 100).to_i %>%        
+                     </div>
+                   </div>
+                   <p><%= @playerdata[0]["DISPLAY_FIRST_LAST"] %>: <%= @player_total_passes.inject(:+) %> Passes</p>
+                   <p><%= @playerdata[0]["TEAM_CITY"] %> <%= @playerdata[0]["TEAM_NAME"] %>: <%= @team_passes_total.inject(:+) %> Passes</p>
+                 </div>
+
+                 <div>
+                  <p><%= @player_total_passes.inject(:+) %>
+                  </p>
+                  <p><%= @team_passes_total.inject(:+) %>
+                  </p>
+                  
+                 </div>
+              <!-- End Player Pass Section -->
+            </div> <!-- End tabpanel -->
+            
+            <div role="tabpanel" class="tab-pane" id="team">
+              <!-- Player Individual Touches Section -->
+                <div>
+                  TOUCHES
+                </div>
+                <div>
+              <!-- Highcharts pie -->
+                <div>
+                  <%= high_chart("my_id4", @chart) %>        
+                </div>
+                  <p>Player touches <%= @player_touches_total[0][15] %></p>                  
+                  <p><%= @team_touches_total[0]["TCH_TOT"] %></p>
+                </div>
+              <!-- End Player Individual Touches Section -->
+
+              <!-- Buffer Between Sections -->
+                <div class="row" style="margin: 20px 0px">
+              
+                </div>
+              <!-- Team Overview Section -->
+                <div>
+                  <%= high_chart("player_contribution_graph", @player_contribution_chart) %>
+                  
+                </div>
+                <div>
+                  TEAM OVERVIEW
+                  <%= high_chart("player_avg_chart", @player_average_bar) %>
+                </div>
+              <!-- End Team Overview Section -->
+            </div><!-- End tabpanel -->
+          </div>
+
+        </div>
+       <!--  End Tab Panel -->
   
   <!-- Buffer Between Sections -->
     <div class="row" style="margin: 20px 0px">
  
     </div>
-  <!-- Main Player Assist Section -->
-    <div class="col-md-6">
-       <div id="assistmadenetwork"></div> 
-    </div>
-    <div class="col-md-6">
-       <div id="assistreceivednetwork"></div>
-       <div class="selectors">
-         menus to select nodes
-       </div>
-    </div>
-
-    <div class="col-md-6">
-       <h4>ASSISTS MADE</h4>
-
-       <table class="table" style="font-size: 12px;">
-         <thead>
-           <th>To</th>
-           <th>AST</th>
-           <th>FG</th>
-           <th>FGA</th>
-           <th>FG%</th>
-         </thead>
-           
-         <% @data.sort_by { |hash| hash["AST"]}.reverse. each do |hash| %>
-        
-         <tbody>
-           <td><%= hash["PASS_TO"] %>
-           </td>
-           <td><%= hash["AST"] %>
-           </td>
-           <td><%= hash["FGM"] %>
-           </td>
-           <td><%= hash["FGA"] %>
-           </td>
-           <td><%= hash["FG_PCT"] %>
-           </td>
-         </tbody>
-         <% end %>
-       </table>
-    </div> <!-- End col-md-6 -->
-     
-    <div class="col-md-6">
-       <h4>ASSISTS RECEIVED</h4>
-         <table class="table" style="font-size: 12px;">
-           <thead>
-             <th>From</th>
-             <th>AST</th>
-           </thead>
-           
-           <% @ReceivedData.sort_by { |hash| hash["AST"]}.reverse. each do |hash| %>
-          
-           <tbody>
-             <td><%= hash["PASS_TO"] %>
-             </td>
-             <td><%= hash["AST"] %>
-             </td>
-           </tbody>
-           <% end %>
-         </table>
-    </div> <!-- End col-md-6 -->
-
-    <div class="row">
-     <h4>PLAYER ASSISTS AS PERCENTAGE OF TEAM TOTAL</h4>
-    </div>
-
-   <div class="row">
-     <div class="progress">
-       <div class="progress-bar" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width:  <%= @PlayerTotalsdata[0]['AST'].to_f / @playerteamdata[0]['AST'].to_f * 100 %>%;">      
-         <%= (@PlayerTotalsdata[0]['AST'].to_f / @playerteamdata[0]['AST'].to_f * 100).to_i %>%        
-       </div>
-     </div>
-     <p><%= @playerdata[0]["DISPLAY_FIRST_LAST"] %>: <%= @PlayerTotalsdata[0]["AST"] %> Assists</p>
-     <p><%= @playerdata[0]["TEAM_CITY"] %> <%= @playerdata[0]["TEAM_NAME"] %>: <%= @playerteamdata[0]["AST"] %> Assists</p>
-   </div>
-  <!-- End Main Player Assist Section -->
+  
   <!-- Buffer Between Sections -->
      <div class="row" style="margin: 20px 0px">
    
      </div>
-  <!-- Main Player Pass Section -->
-     <div class="row">
-       PASSES
-     </div>
-
-     <div class="col-md-6">
-        <div id="passmadenetwork"></div> 
-     </div>
-     <div class="col-md-6">
-        <div id="passreceivednetwork"></div>
-        <div class="selectors">
-          menus to select nodes
-        </div>
-     </div>
-
-     <div class="col-md-6">
-      <h4>PASSES MADE</h4>
-      <table class="table" style="font-size: 12px;">
-        <thead>
-          <th>To</th>
-          <th>PASS</th>
-        </thead>
-        <% @data.sort_by { |hash| hash["PASS"]}.reverse. each do |hash| %>
-       
-        <tbody>
-          <td><%= hash["PASS_TO"] %>
-          </td>
-          <td><%= hash["PASS"] %>
-          </td>
-        </tbody>
-        <% end %>
-      </table>  
-     </div> <!-- End col-md-6 -->
-
-     <div class="col-md-6">
-      <h4>PASSES RECEIVED</h4>
-        <table class="table" style="font-size: 12px;">
-          <thead>
-            <th>From</th>
-            <th>PASS</th>
-          </thead>
-          
-          <% @ReceivedData.sort_by { |hash| hash["PASS"]}.reverse. each do |hash| %>
-         
-          <tbody>
-            <td><%= hash["PASS_TO"] %>
-            </td>
-            <td><%= hash["PASS"] %>
-            </td>
-          </tbody>
-          <% end %>
-        </table>
-     </div> <!-- End col-md-6 -->
-     <div>
-      <p><%= @player_total_passes.inject(:+) %>
-      </p>
-      <p><%= @team_passes_total.inject(:+) %>
-      </p>
-      
-     </div>
-  <!-- End Main Player Pass Section -->
+  
 
   <!-- Buffer Between Sections -->
     <div class="row" style="margin: 20px 0px">
   
     </div>
-  <!-- Main Player Individual Touches Section -->
-    <div>
-      TOUCHES
-    </div>
-    <div>
-  <!-- Highcharts pie -->
-           
-
-      <p>Player touches <%= @player_touches_total[0][15] %></p>
-      
-      <p><%= @team_touches_total[0]["TCH_TOT"] %></p>
-    </div>
-    <div>
-      <div role="tabpanel">
-
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-          <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
-          <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
-          <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
-          <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
-        </ul>
-
-        <!-- Tab panes -->
-        <div class="tab-content">
-          <div role="tabpanel" class="tab-pane active" id="home">
-            Home message
-            <%= high_chart("my_id4", @chart) %> 
-          </div>
-          <div role="tabpanel" class="tab-pane" id="profile">new msg</div>
-          <div role="tabpanel" class="tab-pane" id="messages">another msg</div>
-          <div role="tabpanel" class="tab-pane" id="settings">...</div>
-        </div>
-
-      </div>
-    </div>
-  <!-- End Main Player Individual Touches Section -->
-
-  <!-- Buffer Between Sections -->
-    <div class="row" style="margin: 20px 0px">
   
-    </div>
-  <!-- Main Team Overview Section -->
-    <div>
-      TEAM OVERVIEW
-      <%= high_chart("player_avg_chart", @player_average_bar) %>
-    </div>
-    <div>
-      <%= high_chart("player_contribution_graph", @player_contribution_chart) %>
-    </div>
-  <!-- End Main Team Overview Section -->
 
     </div> <!--  End col-md-9 -->
+  <!-- End Main Player Stat Section -->
   </div> <!-- End row -->
 
-     
-
-    <div class="row" style="margin: 20px 0px">
-   <!-- Player -->
-     <div class="col-md-3">
-       <img src="http://stats.nba.com/media/players/230x185/<%= @data[0]["PLAYER_ID"] %>.png" width="">
-       <h3><%= @playerdata[0]["DISPLAY_FIRST_LAST"] %></h3>
-       <h5><%= @playerdata[0]["TEAM_CITY"] %> <%= @playerdata[0]["TEAM_NAME"] %></h5>
-       <h5><%= @playerdata[0]["POSITION"] %></h5>
-       <h5><%= @playerdata[0]["FROM_YEAR"] %></h5>
-     </div>
-    
-
-     
-   
-   
-   </div>
    
    
  </div> <!--End Container-->
    <script type="text/javascript">
-       // create an array with nodes
-       //value = AST
+
+   $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      var target = $(e.target).attr("href")
+      if (target === "#assists") {
+        loadAssistsNetworks();
+      }
+    });
+       
+    function loadAssistsNetworks() {
          var nodes = [
            {id: <%= @data[0]["PLAYER_ID"] %>,  label: '<%= @data[0]["PLAYER_NAME_LAST_FIRST"] %>'},
            <% @data[0..4].each do |hash| %>
@@ -315,10 +332,7 @@
 
          var network = new vis.Network(container, data, options);
 
-   </script>
-    <script type="text/javascript">
-        // create an array with nodes
-        //value = AST
+   
 
           var nodes = [
             {id: <%= @ReceivedData[0]["PLAYER_ID"] %>,  label: '<%= @data[0]["PLAYER_NAME_LAST_FIRST"] %>'},
@@ -360,12 +374,17 @@
   // dropdown.onchange = update;
 
           var network = new vis.Network(container, data, options);
+    }
 
-    </script> 
-
-    <script type="text/javascript">
-        // create an array with nodes
-        //value = PASS
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+       var target = $(e.target).attr("href")
+       if (target === "#passes") {
+         loadPassesNetworks();
+       }
+     });
+    
+  // PASSES BEGIN
+  function loadPassesNetworks() { 
           var nodes = [
             {id: <%= @data[0]["PLAYER_ID"] %>,  label: '<%= @data[0]["PLAYER_NAME_LAST_FIRST"] %>'},
             <% @data[0..4].each do |hash| %>
@@ -402,16 +421,11 @@
           };
   // var dropdown = document.getElementById("dropdownID");
   // dropdown.onchange = update;
-
           var network = new vis.Network(container, data, options);
 
-    </script> 
-    <script type="text/javascript">
-        // create an array with nodes
-        //value = PASS
 
           var nodes = [
-            {id: <%= @ReceivedData[0]["PLAYER_ID"] %>,  label: '<%= @data[0]["PLAYER_NAME_LAST_FIRST"] %>'},
+            {id: <%= @ReceivedData[0]["PLAYER_ID"] %>,  label: '<%= @data[0]["PLAYER_NAME_LAST_FIRST"] %>', x: 50, y: 50},
             <% @ReceivedData[0..4].each do |hash| %>
               {id: <%= hash["PASS_TEAMMATE_PLAYER_ID"] %>, value: <%= hash["PASS"] %>, label: '<%= hash["PASS_TO"] %>', title: '<%= hash["PASS"] %>' },
             <% end %>
@@ -443,6 +457,7 @@
              
               widthMax: 20,
             },
+            freezeForStabilization: 'true',
             width: '350px',
             height: '350px',
           };
@@ -450,6 +465,7 @@
   // dropdown.onchange = update;
 
           var network = new vis.Network(container, data, options);
+    }     
 
     </script>  
 

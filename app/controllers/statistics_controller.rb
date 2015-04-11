@@ -550,12 +550,10 @@ p  @player_ssn_avg_array
      enabled: false
    }) 
    f.xAxis({
-     allowDecimals: false,
      categories: ['PTS', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD']
    }) 
    f.tooltip({
-     pointFormat: '{series.name}: <b style="color:{series.color}">{point.y}</b><br/>',
-     shared: true
+     pointFormat: '{point.y} Per Game'
    })
     #  Options for Bar
      f.options[:chart][:defaultSeriesType] = "column"
@@ -587,39 +585,71 @@ p  @player_ssn_avg_array
 
     @player_contribute_team_array = []
     @playerteamdata.each do |stat|
-      @player_contribute_team_array << ( @player_ssn_avg_array[0] / (stat['PTS'].to_f / stat['GP']).round(1) ).round(3) * 100
-      @player_contribute_team_array << ( @player_ssn_avg_array[1] / (stat['FGM'].to_f / stat['GP']).round(1) ).round(3) * 100
-      @player_contribute_team_array << ( @player_ssn_avg_array[2] / (stat['FGA'].to_f / stat['GP']).round(1) ).round(3) * 100
-      @player_contribute_team_array << ( @player_ssn_avg_array[3] / (stat['FG_PCT'].to_f / stat['GP']).round(1) ).round(3) * 100
-      @player_contribute_team_array << ( @player_ssn_avg_array[4] / (stat['FG3M'].to_f / stat['GP']).round(1) ).round(3) * 100
-      @player_contribute_team_array << ( @player_ssn_avg_array[5] / (stat['FG3A'].to_f / stat['GP']).round(1) ).round(3) * 100
-      @player_contribute_team_array << ( @player_ssn_avg_array[6] / (stat['FG3_PCT'].to_f / stat['GP']).round(1) ).round(3) * 100
-      @player_contribute_team_array << ( @player_ssn_avg_array[7] / (stat['FTM'].to_f / stat['GP']).round(1) ).round(3) * 100
-      @player_contribute_team_array << ( @player_ssn_avg_array[8] / (stat['FTA'].to_f / stat['GP']).round(1) ).round(3) * 100
-      @player_contribute_team_array << ( @player_ssn_avg_array[9] / (stat['FT_PCT'].to_f / stat['GP']).round(1) ).round(3) * 100
-      @player_contribute_team_array << ( @player_ssn_avg_array[10] / (stat['OREB'].to_f / stat['GP']).round(1) ).round(3) * 100
-      @player_contribute_team_array << ( @player_ssn_avg_array[11] / (stat['DREB'].to_f / stat['GP']).round(1) ).round(3) * 100
-      @player_contribute_team_array << ( @player_ssn_avg_array[12] / (stat['REB'].to_f / stat['GP']).round(1) ).round(3) * 100
-      @player_contribute_team_array << ( @player_ssn_avg_array[13] / (stat['AST'].to_f / stat['GP']).round(1) ).round(3) * 100
-      @player_contribute_team_array << ( @player_ssn_avg_array[14] / (stat['TOV'].to_f / stat['GP']).round(1) ).round(3) * 100
-      @player_contribute_team_array << ( @player_ssn_avg_array[15] / (stat['STL'].to_f / stat['GP']).round(1) ).round(3) * 100
-      @player_contribute_team_array << ( @player_ssn_avg_array[16] / (stat['BLK'].to_f / stat['GP']).round(1) ).round(3) * 100
-      @player_contribute_team_array << ( @player_ssn_avg_array[17] / (stat['BLKA'].to_f / stat['GP']).round(1) ).round(3) * 100
-      @player_contribute_team_array << ( @player_ssn_avg_array[18] / (stat['PF'].to_f / stat['GP']).round(1) ).round(3) * 100
-      @player_contribute_team_array << ( @player_ssn_avg_array[19] / (stat['PFD'].to_f / stat['GP']).round(1) ).round(3) * 100
+      @player_contribute_team_array << (( @player_ssn_avg_array[0] / (stat['PTS'].to_f / stat['GP']).round(1) ) * 100).round(1)
+      @player_contribute_team_array << (( @player_ssn_avg_array[1] / (stat['FGM'].to_f / stat['GP']).round(1) ) * 100).round(1)
+      @player_contribute_team_array << (( @player_ssn_avg_array[2] / (stat['FGA'].to_f / stat['GP']).round(1) ) * 100).round(1)
+      @player_contribute_team_array << (( @player_ssn_avg_array[3] / (stat['FG_PCT'].to_f / stat['GP']).round(1) ) * 100).round(1)
+      @player_contribute_team_array << (( @player_ssn_avg_array[4] / (stat['FG3M'].to_f / stat['GP']).round(1) ) * 100).round(1)
+      @player_contribute_team_array << (( @player_ssn_avg_array[5] / (stat['FG3A'].to_f / stat['GP']).round(1) ) * 100).round(1)
+      @player_contribute_team_array << (( @player_ssn_avg_array[6] / (stat['FG3_PCT'].to_f / stat['GP']).round(1) ) * 100).round(1)
+      @player_contribute_team_array << (( @player_ssn_avg_array[7] / (stat['FTM'].to_f / stat['GP']).round(1) ) * 100).round(1)
+      @player_contribute_team_array << (( @player_ssn_avg_array[8] / (stat['FTA'].to_f / stat['GP']).round(1) ) * 100).round(1)
+      @player_contribute_team_array << (( @player_ssn_avg_array[9] / (stat['FT_PCT'].to_f / stat['GP']).round(1) ) * 100).round(1)
+      @player_contribute_team_array << (( @player_ssn_avg_array[10] / (stat['OREB'].to_f / stat['GP']).round(1) ) * 100).round(1)
+      @player_contribute_team_array << (( @player_ssn_avg_array[11] / (stat['DREB'].to_f / stat['GP']).round(1) ) * 100).round(1)
+      @player_contribute_team_array << (( @player_ssn_avg_array[12] / (stat['REB'].to_f / stat['GP']).round(1) ) * 100).round(1)
+      @player_contribute_team_array << (( @player_ssn_avg_array[13] / (stat['AST'].to_f / stat['GP']).round(1) ) * 100).round(1)
+      @player_contribute_team_array << (( @player_ssn_avg_array[14] / (stat['TOV'].to_f / stat['GP']).round(1) ) * 100).round(1)
+      @player_contribute_team_array << (( @player_ssn_avg_array[15] / (stat['STL'].to_f / stat['GP']).round(1) ) * 100).round(1)
+      @player_contribute_team_array << (( @player_ssn_avg_array[16] / (stat['BLK'].to_f / stat['GP']).round(1) ) * 100).round(1)
+      @player_contribute_team_array << (( @player_ssn_avg_array[17] / (stat['BLKA'].to_f / stat['GP']).round(1) ) * 100).round(1)
+      @player_contribute_team_array << (( @player_ssn_avg_array[18] / (stat['PF'].to_f / stat['GP']).round(1) ) * 100).round(1)
+      @player_contribute_team_array << (( @player_ssn_avg_array[19] / (stat['PFD'].to_f / stat['GP']).round(1) ) * 100).round(1)
     end
+p "Player team contribut"
+    p @player_contribute_team_array
 
-    p @player_contribution_team_avg_array
+
 #Highchart combo chart player contribution to team
 @player_contribution_chart = LazyHighCharts::HighChart.new('player_contribution_graph') do |f|
-      f.title({ :text=>"Combination chart"})
-      f.options[:xAxis][:categories] = ['PTS', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD']
-      f.labels(:items=>[:html=>"Total fruit consumption", :style=>{:left=>"40px", :top=>"8px", :color=>"black"} ])      
-      f.series(:type=> 'column',:name=> 'Player',:data=> @player_ssn_avg_array)
+      f.title({ :text=>"Contribution to Team Production"})
+      # f.options[:xAxis][:categories] = ['PTS', 'FGM', 'FGA', 'FG_PCT', 'FG3M', 'FG3A', 'FG3_PCT', 'FTM', 'FTA', 'FT_PCT', 'OREB', 'DREB', 'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD']
+      f.xAxis({
+        crosshair: true,
+        categories: ['PTS', 'FGM', 'FGA', '%', 'FG3M', 'FG3A', '%',  'FTM', 'FTA', '%', 'OREB', 'DREB', 'REB', 'AST', 'TOV', 'STL', 'BLK', 'BLKA', 'PF', 'PFD']
+      }) 
+      # f.labels(:items=>[:html=>"Total fruit consumption", :style=>{:left=>"40px", :top=>"8px", :color=>"black"} ])      
       
-      f.series(:type=> 'spline',:name=> 'Average', :data=> @player_contribute_team_array)
+      f.series(:type=> 'column',:name=> '% of Team Production', :yaxis=> 0, :data=> @player_contribute_team_array, :tooltip=> {:valueSuffix=> ' %'})
+      f.series(:type=> 'spline',:name=> 'Per Game Average', :yaxis=> 1,:data=> @player_ssn_avg_array)
+
+      f.tooltip({
+        shared: true,
+        pointFormat: '{series.name}: <b style="color:{series.color}">{point.y}</b><br/>',
+
+      })
+
+      # f.yAxis [
+      #   {:max=> 40},
+      #   {:title => {:text => "Player Season Averages", :margin => 10, :style => {:color=>'blue'}} },
+      #   {:title => {:text => "Contribution to Team"}, :opposite => true},
+      # ]
 end
 
+@h = LazyHighCharts::HighChart.new('dualgraph') do |f|
+        f.title(:text => "Population vs GDP For 5 Big Countries [2009]")
+        f.xAxis(:categories => ["United States", "Japan", "China", "Germany", "France"])
+        f.series(:name => "GDP in Billions", :yAxis => 0, :data => [14119, 5068, 4985, 3339, 2656])
+        f.series(:name => "Population in Millions", :yAxis => 1, :data => [310, 127, 1340, 81, 65])
+        
+        f.yAxis [
+          {:title => {:text => "GDP in Billions", :margin => 70} },
+          {:title => {:text => "Population in Millions"}, :opposite => true},
+        ]
+
+        # f.legend(:align => 'right', :verticalAlign => 'top', :y => 75, :x => -50, :layout => 'vertical',)
+        f.chart({:defaultSeriesType=>"column"})
+      end
 #NBA.com passes made 
     @player_passes = Unirest.get("http://stats.nba.com/stats/playerdashptpass?DateFrom=&DateTo=&GameSegment=&LastNGames=0&LeagueID=00&Location=&Month=0&OpponentTeamID=0&Outcome=&PerMode=Totals&Period=0&PlayerID=101108&Season=2014-15&SeasonSegment=&SeasonType=Regular+Season&TeamID=0&VsConference=&VsDivision=")
      @player_passes
@@ -752,13 +782,13 @@ end
          f.series(:name=>'REB',:data=> reb_array )
          f.series(:name=>'PTS',:data=>pts_array)
 
-         f.title({ :text=>""})
+         f.title({ :text=>"Game Log"})
          f.legend({
             align: 'right',
             verticalAlign: 'top',
-            # x: -10,
-            # y: 50,
-            floating: false
+            x: -10,
+            y: 50,
+            floating: true
           }) 
           f.xAxis({
             allowDecimals: false,
@@ -838,13 +868,17 @@ end
       :name=> 'touches',
       :data=> [
         {
-          name:'Passes',
-          y: @player_total_passes.inject(:+),
-          drilldown: 'passes'
+          name:'Non-Assist Passes ',
+          y: @player_total_passes.inject(:+) - @PlayerTotalsdata[0]['AST'],
         }, {
-         :name=> 'Field Goal Attempts',    
-         :y=> @PlayerTotalsdata[0]["FGA"],
-         :drilldown=> 'field goal attempts'
+          name: 'Assists',
+          y: @PlayerTotalsdata[0]['AST']
+        }, {
+         :name=> 'Field Goal Miss',    
+         :y=> @PlayerTotalsdata[0]["FGA"] - @PlayerTotalsdata[0]["FGM"]  
+        }, {  
+         :name=> 'Field Goal Made',    
+         :y=> @PlayerTotalsdata[0]["FGM"]
         }, {
           name: 'Turnovers',
           y: @PlayerTotalsdata[0]["TOV"]    
@@ -855,16 +889,7 @@ end
       ]
     }     
     f.series(series) 
-#DRILLDOWN           
-    f.drilldown(
-      series = {
-        id: 'passes',
-        data: [
-          ["General", 100],
-          ["Assist", 50]
-        ]
-      }
-    )
+
 
     f.options[:title][:text] = "Player Touches #{@player_touches_total[0][15]}"
     # f.legend(:layout=> 'vertical',:style=> {:left=> 'auto', :bottom=> 'auto',:right=> '50px',:top=> '100px'}) 
